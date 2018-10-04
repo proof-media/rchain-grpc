@@ -3,7 +3,7 @@
 
 """The setup script."""
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -11,11 +11,11 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=6.0', ]
+requirements = ['Click>=6.0', 'toolz', 'grpcio', 'googleapis-common-protos']
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = ['pytest-runner']
 
-test_requirements = ['pytest', ]
+test_requirements = ['pytest']
 
 setup(
     author="Mateusz Probachta",
@@ -27,13 +27,10 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3 :: Only',
     ],
     description="python client to rchain gRPC",
-    entry_points={
-        'console_scripts': [
-            'py_rchain_grpc=rchain_grpc.cli:main',
-        ],
-    },
+    entry_points={'console_scripts': ['py_rchain_grpc=rchain_grpc.cli:main']},
     install_requires=requirements,
     license="MIT license",
     long_description=readme + '\n\n' + history,
