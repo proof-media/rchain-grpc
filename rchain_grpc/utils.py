@@ -42,7 +42,7 @@ class Connection(AbstractContextManager, Generic[gRPCStub]):
 
 def create_connection(
     stub: Type[gRPCStub],
-    channel_fn=insecure_channel,
+    channel_fn: Callable[[str], Channel] = insecure_channel,
     host: str = '127.0.0.1',
     port: int = 40401,
 ) -> Connection[gRPCStub]:
