@@ -1,0 +1,25 @@
+version: "2.1"
+
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    networks:
+      - tests
+    depends_on:
+      - tests-rchain
+    volumes:
+      - ./:/project
+    environment:
+      - RCHAIN_GRPC_HOST=tests-rchain
+
+  tests-rchain:
+    networks:
+      - tests
+    build:
+      context: ./rchain
+      dockerfile: ./Dockerfile
+
+networks:
+  tests:
