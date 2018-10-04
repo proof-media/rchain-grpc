@@ -1,6 +1,6 @@
 import pytest
-
 from click.testing import CliRunner
+
 from rchain_grpc import cli
 
 
