@@ -43,3 +43,17 @@ def test_connection_as_contextmanager(channel, stub, connection):
         assert connection_from_context_manager is connection
     with pytest.raises(ConnectionClosedException):
         connection.test_method(1)
+
+
+@pytest.mark.parametrize(
+    "d1,d2,result",
+    [
+        ({}, {}, True),
+        ({'a': 1}, {'a': 1}, True),
+        ({'a': 1}, {'a': 2}, False),
+        ({'a': {'b': 1}}, {'a': {}}, False),
+        ({'a': [1], 'b': 11}, {'b': 11, 'a': [1]}, True),
+    ],
+)
+def test_is_equal(d1, d2, result):
+    assert utils.is_equal(d1, d2) == result

@@ -1,7 +1,8 @@
 import functools
 import secrets
+import time
 from datetime import datetime
-from typing import List
+from typing import Iterator, List, Optional
 
 from google.protobuf.empty_pb2 import Empty
 
@@ -9,7 +10,7 @@ from . import rho_types
 from .exceptions import CasperException
 from .generated import CasperMessage_pb2_grpc
 from .generated.CasperMessage_pb2 import DeployData
-from .utils import Connection, create_connection_builder
+from .utils import Connection, create_connection_builder, is_equal
 
 
 def throw_if_not_successful(response: dict, name: str) -> dict:
@@ -61,16 +62,32 @@ def propose(connection: Connection) -> dict:
     return throw_if_not_successful(rho_types.to_dict(output), 'propose')
 
 
-def listen_on():
-    # TODO: add async version of get_value_from
-    raise NotImplementedError('Not implemented! Use `get_value_from` instead.')
+def listen_on(
+    connection: Connection, name: str, interval: float = 0.5
+) -> Iterator[dict]:
+    ""
+    """listen on channel and return iterator witch values.
+    Check channel in every second given in `interval`"""
+    old_value = {}
+
+    # TODO: ask rchain dev team for making `showBlocks` streamin infinitly
+    # TODO: use ininite stream from `showBlocks` instead and check only on new block
+    while True:
+        value = get_value_from(connection, name)
+        if value is not None and not is_equal(value, old_value):
+            yield value
+            old_value = value
+        time.sleep(interval)
 
 
-def get_value_from(connection: Connection, name: str) -> dict:
+def get_value_from(connection: Connection, name: str) -> Optional[dict]:
     """get value from channel on given name"""
     rchain_channel = rho_types.to_channel([name])
     output = connection.listenForDataAtName(rchain_channel)
-    return rho_types.to_dict(output)
+    result = rho_types.to_dict(output)
+    if 'blockResults' in result:
+        return result
+    return None
 
 
 def run_and_get_value_from(

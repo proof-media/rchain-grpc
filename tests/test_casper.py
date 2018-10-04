@@ -1,4 +1,5 @@
 import secrets
+from concurrent import futures
 
 import pytest
 
@@ -67,7 +68,22 @@ def test_get_value_from(proposed, rchain_ch_name, rchain_ch_value, connection):
     assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
 
 
+def test_get_value_from_empty_channel(connection, rchain_ch_name):
+    ret = casper.get_value_from(connection, f'not-{rchain_ch_name}')
+    assert ret == None
+
+
 def test_run_and_get_value_from(connection, rchain_ch_value):
     term = f'proof_output!("{rchain_ch_value}")'
     ret = casper.run_and_get_value_from(connection, term)
     assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
+
+
+def test_listen_on(deployed, connection, rchain_ch_name):
+    def get_ret():
+        casper.listen_on, connection, rchain_ch_name
+
+    with futures.ThreadPoolExecutor() as executor:
+        future = executor.submit(next, casper.listen_on(connection, rchain_ch_name))
+        proposed(connection)
+        assert future.result() == {}
