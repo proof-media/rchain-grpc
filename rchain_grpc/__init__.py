@@ -1,7 +1,12 @@
-# -*- coding: utf-8 -*-
+# hack needed becouse protc use absolute imports
+import sys, os
 
-"""Top-level package for rchain-grpc."""
+ROOT = os.path.dirname(__file__)
+GENERATED = os.path.join(ROOT, 'generated')
+sys.path.append(GENERATED)
 
-__author__ = """Mateusz Probachta"""
-__email__ = 'mateusz@proofmedia.io'
-__version__ = '0.0.1'
+import CasperMessage_pb2_grpc
+import CasperMessage_pb2
+
+import RhoTypes_pb2_grpc
+import RhoTypes_pb2
