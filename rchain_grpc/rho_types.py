@@ -3,20 +3,33 @@ from typing import Any, List, TypeVar
 
 import toolz
 from google.protobuf.empty_pb2 import Empty
-from google.protobuf.internal.containers import RepeatedCompositeFieldContainer
+from google.protobuf.internal.containers import (RepeatedCompositeFieldContainer,
+                                                 RepeatedScalarFieldContainer)
 from google.protobuf.message import Message
 
 from .generated.CasperMessage_pb2 import DataWithBlockInfo
 from .generated.RhoTypes_pb2 import Channel, Expr, Par, Var
 
-expr_to_obj_mapping = {'g_string': str}
+
+def e_map_body_to_dict(body):
+    kvs = body['kvs']
+    ret = {}
+    for kv in kvs:
+        print(kv)
+        k = toolz.get_in(['key', 0], kv)
+        v = toolz.get_in(['value', 0], kv)
+        ret[k] = v
+    return ret
+
+
+expr_to_obj_mapping = {'g_string': str, 'e_map_body': e_map_body_to_dict}
 
 GrpcClass = TypeVar('GrpcClass')
 
 
 def expr_to_obj(expr: dict) -> dict:
     type_, value = toolz.first(expr.items())
-    return expr_to_obj_mapping[type_](value)
+    return expr_to_obj_mapping.get(type_, toolz.identity)(value)
 
 
 @functools.singledispatch
@@ -36,6 +49,11 @@ def to_dict(other: Any) -> Any:
 
 @to_dict.register(RepeatedCompositeFieldContainer)
 def _(container: RepeatedCompositeFieldContainer) -> List[dict]:
+    return [to_dict(e) for e in container]
+
+
+@to_dict.register(RepeatedScalarFieldContainer)
+def _(container: RepeatedScalarFieldContainer) -> List[dict]:
     return [to_dict(e) for e in container]
 
 

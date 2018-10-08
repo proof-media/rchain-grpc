@@ -2,7 +2,6 @@ import secrets
 from concurrent import futures
 
 import pytest
-
 from rchain_grpc import casper
 
 
@@ -79,11 +78,28 @@ def test_run_and_get_value_from(connection, rchain_ch_value):
     assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
 
 
-def test_listen_on(deployed, connection, rchain_ch_name):
-    def get_ret():
-        casper.listen_on, connection, rchain_ch_name
+def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):
+    def run():
+        return next(casper.listen_on(connection, rchain_ch_name))
 
     with futures.ThreadPoolExecutor() as executor:
-        future = executor.submit(next, casper.listen_on(connection, rchain_ch_name))
-        proposed(connection)
-        assert future.result() == {}
+        future = executor.submit(run)
+        proposed(connection, deployed)
+        assert future.result(timeout=5)['blockResults'][0]['postBlockData'] == [
+            [rchain_ch_value]
+        ]
+
+
+@pytest.mark.parametrize(
+    'args,expected',
+    [
+        ('true', [[True]]),
+        ('false', [[False]]),
+        ('1, false', [[1], [False]]),
+        ('{}.set("x", 24).set("y", "value")', [[{'x': 24, 'y': 'value'}]]),
+    ],
+)
+def test_value_conversion(args, expected, connection):
+    term = f'proof_output!({args})'
+    ret = casper.run_and_get_value_from(connection, term)
+    assert ret['blockResults'][0]['postBlockData'] == expected
