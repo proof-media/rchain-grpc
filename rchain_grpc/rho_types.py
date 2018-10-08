@@ -15,7 +15,6 @@ def e_map_body_to_dict(body):
     kvs = body['kvs']
     ret = {}
     for kv in kvs:
-        print(kv)
         k = toolz.get_in(['key', 0], kv)
         v = toolz.get_in(['value', 0], kv)
         ret[k] = v
