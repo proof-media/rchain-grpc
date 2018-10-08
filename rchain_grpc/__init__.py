@@ -12,4 +12,4 @@ import RhoTypes_pb2  # isort:skip
 import RhoTypes_pb2_grpc  # isort:skip
 
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
