@@ -22,3 +22,7 @@ install:
 
 script:
   - docker-compose run --rm tests
+
+
+after_script:
+  - docker-compose down -v --rmi local
