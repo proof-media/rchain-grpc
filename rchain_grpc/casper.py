@@ -7,7 +7,7 @@ from typing import Iterator, List, Optional
 from google.protobuf.empty_pb2 import Empty
 
 from . import rho_types
-from .exceptions import CasperException
+from .exceptions import CasperException, TimeoutException
 from .generated import CasperMessage_pb2_grpc
 from .generated.CasperMessage_pb2 import DeployData
 from .utils import Connection, create_connection_builder, is_equal
@@ -63,7 +63,7 @@ def propose(connection: Connection) -> dict:
 
 
 def listen_on(
-    connection: Connection, name: str, interval: float = 0.5
+    connection: Connection, name: str, interval: float = 0.5, timeout: float = 60.0
 ) -> Iterator[dict]:
     ""
     """listen on channel and return iterator witch values.
@@ -72,11 +72,14 @@ def listen_on(
 
     # TODO: ask rchain dev team for making `showBlocks` streamin infinitly
     # TODO: use ininite stream from `showBlocks` instead and check only on new block
+    start_time = time.time()
     while True:
         value = get_value_from(connection, name)
         if value is not None and not is_equal(value, old_value):
             yield value
             old_value = value
+        if time.time() - start_time + interval > timeout:
+            raise TimeoutException()
         time.sleep(interval)
 
 

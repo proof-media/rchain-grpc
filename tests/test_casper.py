@@ -2,7 +2,7 @@ import secrets
 from concurrent import futures
 
 import pytest
-from rchain_grpc import casper
+from rchain_grpc import casper, exceptions
 
 
 @pytest.fixture
@@ -88,6 +88,11 @@ def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):
         assert future.result(timeout=5)['blockResults'][0]['postBlockData'] == [
             [rchain_ch_value]
         ]
+
+
+def test_listen_on_timeout_if_not_deployed_and_proposed(connection, rchain_ch_name):
+    with pytest.raises(exceptions.TimeoutException) as ex:
+        next(casper.listen_on(connection, rchain_ch_name, timeout=1))
 
 
 @pytest.mark.parametrize(
