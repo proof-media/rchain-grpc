@@ -1,0 +1,3 @@
+contract @"add1"(@number, cb) = {
+    cb!(number + 1)
+}

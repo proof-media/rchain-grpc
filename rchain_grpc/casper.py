@@ -1,8 +1,9 @@
 import functools
+import json
 import secrets
 import time
 from datetime import datetime
-from typing import Iterator, List, Optional
+from typing import Any, Iterator, List, Optional
 
 from google.protobuf.empty_pb2 import Empty
 
@@ -106,7 +107,36 @@ def run_and_get_value_from(
     passed to `deploy` function."""
 
     channel_name = f'rchain_grpc_{secrets.token_hex(5)}'
-    preprocessed_term = term.replace(output_placeholder, f'@"{channel_name}"')
+    channel_name_str = rho_types.to_public_channel_name(channel_name)
+    preprocessed_term = term.replace(output_placeholder, channel_name_str)
     deploy(connection, preprocessed_term, **deploy_kargs)
     propose(connection)
     return get_value_from(connection, channel_name)
+
+
+def run_contract(
+    connection: Connection,
+    contract_name: str,
+    contract_args: List[Any],
+    timeout: float = 60.0,
+    **deploy_kwargs,
+):
+    """
+    Run contract and return result if contract accept callback channel as last argument:
+    ```rholang
+    contract @"add1"(@number, cb) = {
+      cb!(number + 1)
+    }
+    ```
+    """
+    ack_name = f'ack_{secrets.token_hex(10)}'
+    ack_name_str = rho_types.to_public_channel_name(ack_name)
+    contract_name_str = rho_types.to_public_channel_name(contract_name)
+    contract_args_str = ', '.join(
+        [json.dumps(a) for a in contract_args] + [f'*{ack_name_str}']
+    )
+    term = f'{contract_name_str}!({contract_args_str})'
+
+    deploy(connection, term, **deploy_kwargs)
+    propose(connection)
+    return next(listen_on(connection, ack_name, timeout=timeout))
