@@ -8,3 +8,7 @@ class CasperException(GRPCException):
 
 class ConnectionClosedException(GRPCException):
     pass
+
+
+class TimeoutException(GRPCException):
+    pass

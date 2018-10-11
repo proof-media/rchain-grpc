@@ -1,13 +1,15 @@
+import random
 import secrets
 from concurrent import futures
 
 import pytest
-from rchain_grpc import casper
+from rchain_grpc import casper, exceptions
 
 
 @pytest.fixture
 def connection(rchain_host):
-    return casper.create_connection(host=rchain_host)
+    with casper.create_connection(host=rchain_host) as conn:
+        yield conn
 
 
 def test_get_blocks(connection):
@@ -90,6 +92,11 @@ def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):
         ]
 
 
+def test_listen_on_timeout_if_not_deployed_and_proposed(connection, rchain_ch_name):
+    with pytest.raises(exceptions.TimeoutException) as ex:
+        next(casper.listen_on(connection, rchain_ch_name, timeout=1))
+
+
 @pytest.mark.parametrize(
     'args,expected',
     [
@@ -103,3 +110,13 @@ def test_value_conversion(args, expected, connection):
     term = f'proof_output!({args})'
     ret = casper.run_and_get_value_from(connection, term)
     assert ret['blockResults'][0]['postBlockData'] == expected
+
+
+def test_run_contract(connection, add_contract_path):
+    number = random.randint(100, 1000)
+    with open(add_contract_path) as contract_file:
+        term = contract_file.read()
+    casper.deploy(connection, term)
+    casper.propose(connection)
+    result = casper.run_contract(connection, "add1", [number])
+    assert result['blockResults'][0]['postBlockData'][0][0] == number + 1

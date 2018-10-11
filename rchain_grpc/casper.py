@@ -1,13 +1,14 @@
 import functools
+import json
 import secrets
 import time
 from datetime import datetime
-from typing import Iterator, List, Optional
+from typing import Any, Iterator, List, Optional
 
 from google.protobuf.empty_pb2 import Empty
 
 from . import rho_types
-from .exceptions import CasperException
+from .exceptions import CasperException, TimeoutException
 from .generated import CasperMessage_pb2_grpc
 from .generated.CasperMessage_pb2 import DeployData
 from .utils import Connection, create_connection_builder, is_equal
@@ -63,7 +64,7 @@ def propose(connection: Connection) -> dict:
 
 
 def listen_on(
-    connection: Connection, name: str, interval: float = 0.5
+    connection: Connection, name: str, interval: float = 0.5, timeout: float = 60.0
 ) -> Iterator[dict]:
     ""
     """listen on channel and return iterator witch values.
@@ -72,11 +73,14 @@ def listen_on(
 
     # TODO: ask rchain dev team for making `showBlocks` streamin infinitly
     # TODO: use ininite stream from `showBlocks` instead and check only on new block
+    start_time = time.time()
     while True:
         value = get_value_from(connection, name)
         if value is not None and not is_equal(value, old_value):
             yield value
             old_value = value
+        if time.time() - start_time + interval > timeout:
+            raise TimeoutException()
         time.sleep(interval)
 
 
@@ -103,7 +107,36 @@ def run_and_get_value_from(
     passed to `deploy` function."""
 
     channel_name = f'rchain_grpc_{secrets.token_hex(5)}'
-    preprocessed_term = term.replace(output_placeholder, f'@"{channel_name}"')
+    channel_name_str = rho_types.to_public_channel_name(channel_name)
+    preprocessed_term = term.replace(output_placeholder, channel_name_str)
     deploy(connection, preprocessed_term, **deploy_kargs)
     propose(connection)
     return get_value_from(connection, channel_name)
+
+
+def run_contract(
+    connection: Connection,
+    contract_name: str,
+    contract_args: List[Any],
+    timeout: float = 60.0,
+    **deploy_kwargs,
+):
+    """
+    Run contract and return result if contract accept callback channel as last argument:
+    ```rholang
+    contract @"add1"(@number, cb) = {
+      cb!(number + 1)
+    }
+    ```
+    """
+    ack_name = f'ack_{secrets.token_hex(10)}'
+    ack_name_str = rho_types.to_public_channel_name(ack_name)
+    contract_name_str = rho_types.to_public_channel_name(contract_name)
+    contract_args_str = ', '.join(
+        [json.dumps(a) for a in contract_args] + [f'*{ack_name_str}']
+    )
+    term = f'{contract_name_str}!({contract_args_str})'
+
+    deploy(connection, term, **deploy_kwargs)
+    propose(connection)
+    return next(listen_on(connection, ack_name, timeout=timeout))

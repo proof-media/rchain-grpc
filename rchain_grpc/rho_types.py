@@ -1,5 +1,5 @@
 import functools
-from typing import Any, List, TypeVar
+from typing import Any, List, Tuple, TypeVar, Union
 
 import toolz
 from google.protobuf.empty_pb2 import Empty
@@ -77,3 +77,15 @@ def to_channel(objs: list) -> Channel:
     channel = Channel()
     channel.quote.CopyFrom(par)
     return channel
+
+
+@functools.singledispatch
+def to_public_channel_name(other: Any):
+    return f'@"{other}"'
+
+
+@to_public_channel_name.register(list)
+@to_public_channel_name.register(tuple)
+def _(t: Union[List[Any], Tuple[Any]]):
+    parts = ','.join([json.dumps(p) for p in t])
+    return f'@[{parts}]'
