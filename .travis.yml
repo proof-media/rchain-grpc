@@ -25,4 +25,4 @@ script:
 
 
 after_script:
-  - docker-compose down -v --rmi local
+  - docker-compose down
