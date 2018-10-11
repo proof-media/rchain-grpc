@@ -1,26 +1,24 @@
-# Config file for automatic testing at travis-ci.org
-
 language: python
-python:
-  - 3.7
+sudo: required
 
-# Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -U tox-travis
+env:
+  - DOCKER_COMPOSE_VERSION=1.22.0
 
-# Command to run tests, e.g. python setup.py test
-script: tox
+cache:
+  directories:
+  - docker
 
-# Assuming you have installed the travis-ci CLI tool, after you
-# create the Github repo and add it to Travis, run the
-# following command to finish PyPI deployment setup:
-# $ travis encrypt --add deploy.password
-deploy:
-  provider: pypi
-  distributions: sdist bdist_wheel
-  user: beetleman
-  password:
-    secure: PLEASE_REPLACE_ME
-  on:
-    tags: true
-    repo: beetleman/rchain_grpc
-    python: 3.7
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin/
+  - docker --version
+  - docker-compose --version
+
+install:
+  - docker-compose build
+
+
+script:
+  - docker-compose run --rm tests
