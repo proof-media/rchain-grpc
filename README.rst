@@ -4,19 +4,19 @@ rchain-grpc
 
 
 .. image:: https://img.shields.io/pypi/v/rchain_grpc.svg
-        :target: https://pypi.python.org/pypi/rchain_grpc
+    :target: https://pypi.python.org/pypi/rchain_grpc
 
-.. image:: https://img.shields.io/travis/proof-media/rchain_grpc.svg
-        :target: https://travis-ci.org/proof-media/rchain_grpc
-
+.. image:: https://travis-ci.com/proof-media/rchain-grpc.svg?branch=master
+    :target: https://travis-ci.com/proof-media/rchain-grpc
+    
 .. image:: https://readthedocs.org/projects/rchain-grpc/badge/?version=latest
-        :target: https://rchain-grpc.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
+    :target: https://rchain-grpc.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 
 .. image:: https://pyup.io/repos/github/proof-media/rchain_grpc/shield.svg
-     :target: https://pyup.io/repos/github/proof-media/rchain_grpc/
-     :alt: Updates
+    :target: https://pyup.io/repos/github/proof-media/rchain_grpc/
+    :alt: Updates
 
 
 
