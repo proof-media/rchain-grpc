@@ -1,3 +1,7 @@
 contract @"add1"(@number, cb) = {
     cb!(number + 1)
 }
+|
+contract @["add", "1"](@number, @cb) = {
+    @"add1"!(number, cb)
+}

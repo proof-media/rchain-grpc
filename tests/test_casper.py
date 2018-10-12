@@ -112,11 +112,12 @@ def test_value_conversion(args, expected, connection):
     assert ret['blockResults'][0]['postBlockData'] == expected
 
 
-def test_run_contract(connection, add_contract_path):
+@pytest.mark.parametrize("contract", ["add1", ["add", "1"]])
+def test_run_contract(contract, connection, add_contract_path):
     number = random.randint(100, 1000)
     with open(add_contract_path) as contract_file:
         term = contract_file.read()
     casper.deploy(connection, term)
     casper.propose(connection)
-    result = casper.run_contract(connection, "add1", [number])
+    result = casper.run_contract(connection, contract, [number])
     assert result['blockResults'][0]['postBlockData'][0][0] == number + 1
