@@ -1,24 +1,25 @@
 language: python
 sudo: required
 env:
-- DOCKER_COMPOSE_VERSION=1.22.0
+  - DOCKER_COMPOSE_VERSION=1.22.0
 cache:
   directories:
-  - docker
+    - docker
 before_install:
-- sudo rm /usr/local/bin/docker-compose
-- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
-  -s`-`uname -m` > docker-compose
-- chmod +x docker-compose
-- sudo mv docker-compose /usr/local/bin/
-- docker --version
-- docker-compose --version
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin/
+  - docker --version
+  - docker-compose --version
 install:
-- docker-compose build
+  - docker-compose build
 script:
-- docker-compose run --rm tests
+  - docker-compose run --rm tests
 after_script:
-- docker-compose down
+  - docker-compose down
+before_deploy:
+  - sudo git clean -fXd
 deploy:
   provider: pypi
   user: proof-media
