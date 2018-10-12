@@ -20,10 +20,10 @@ after_script:
   - docker-compose down
 before_deploy:
   - sudo git clean -fXd
-deploy:
-  provider: pypi
-  user: proof-media
-  password:
-    secure: gTSzZrDAkDgBqFl/j8AAT+YhTPkpZKXzXihqjmw8WX5qwGgr+MKtwjjoZrPmNMskxIIGcgTmwh3cXm+0uX1Aee+PGvjxibFSRwM7jbKx/+Yletd1cWVDraY/6Tb11anfuaGtKerCNHuR1u4C0bj49ArFTNqPT3MKSCwsNEmuCwCnqfG6TBI6UcBJrhrY/eOghgidJNGrq71sJ/y41Ki7jbhbPjKEBZLQiCVb5hW8xRgPubI/B/LjhR/Ppm6UQEibxlx5gsUy9gcBSNWDMOYKpgP5iez6ZPdq1bSmr6L3q+1Hkx4LpuNCJIwbbWkq8CySpCH/XikUOY8jYXxHo0RBuZpzOEA/M5KN+WQ0poX8KYKeqccudA7rL8w8NioCfXIF9fB5fB3ds7yL4E3nL79FRTCct1rjjVvGQLTjK5w0xERVnynM+WbdKRTysdoLKSXgWJpMrMca5TgxeswaytwfJcwKYlRPvl4dSvLocMadDQDkdJ1AOJhuCc4ibx8B+LWJf+CSybMkF3B3FiU2WtVg9yvOg+YlExS5XMcLD8m1EXi/4yJqRanj+0H4jxUPUdn6uPwnbcw/TZ3ukPSpAU61iOROLeBSQb9SyB3ajj28E5rqQJ1l2EeTIxOyaJrXLzakfWwT3oXCKIkdm5b4agECDTLfFsLu52HL0MN+1SwGXII=
-  on:
-    tags: true
+# deploy:
+#   provider: pypi
+#   user: proof-media
+#   password:
+#     secure: gTSzZrDAkDgBqFl/j8AAT+YhTPkpZKXzXihqjmw8WX5qwGgr+MKtwjjoZrPmNMskxIIGcgTmwh3cXm+0uX1Aee+PGvjxibFSRwM7jbKx/+Yletd1cWVDraY/6Tb11anfuaGtKerCNHuR1u4C0bj49ArFTNqPT3MKSCwsNEmuCwCnqfG6TBI6UcBJrhrY/eOghgidJNGrq71sJ/y41Ki7jbhbPjKEBZLQiCVb5hW8xRgPubI/B/LjhR/Ppm6UQEibxlx5gsUy9gcBSNWDMOYKpgP5iez6ZPdq1bSmr6L3q+1Hkx4LpuNCJIwbbWkq8CySpCH/XikUOY8jYXxHo0RBuZpzOEA/M5KN+WQ0poX8KYKeqccudA7rL8w8NioCfXIF9fB5fB3ds7yL4E3nL79FRTCct1rjjVvGQLTjK5w0xERVnynM+WbdKRTysdoLKSXgWJpMrMca5TgxeswaytwfJcwKYlRPvl4dSvLocMadDQDkdJ1AOJhuCc4ibx8B+LWJf+CSybMkF3B3FiU2WtVg9yvOg+YlExS5XMcLD8m1EXi/4yJqRanj+0H4jxUPUdn6uPwnbcw/TZ3ukPSpAU61iOROLeBSQb9SyB3ajj28E5rqQJ1l2EeTIxOyaJrXLzakfWwT3oXCKIkdm5b4agECDTLfFsLu52HL0MN+1SwGXII=
+#   on:
+#     tags: true
