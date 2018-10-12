@@ -1,28 +1,28 @@
 language: python
 sudo: required
-
 env:
-  - DOCKER_COMPOSE_VERSION=1.22.0
-
+- DOCKER_COMPOSE_VERSION=1.22.0
 cache:
   directories:
   - docker
-
 before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin/
-  - docker --version
-  - docker-compose --version
-
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin/
+- docker --version
+- docker-compose --version
 install:
-  - docker-compose build
-
-
+- docker-compose build
 script:
-  - docker-compose run --rm tests
-
-
+- docker-compose run --rm tests
 after_script:
-  - docker-compose down
+- docker-compose down
+deploy:
+  provider: pypi
+  user: proof-media
+  password:
+    secure: gTSzZrDAkDgBqFl/j8AAT+YhTPkpZKXzXihqjmw8WX5qwGgr+MKtwjjoZrPmNMskxIIGcgTmwh3cXm+0uX1Aee+PGvjxibFSRwM7jbKx/+Yletd1cWVDraY/6Tb11anfuaGtKerCNHuR1u4C0bj49ArFTNqPT3MKSCwsNEmuCwCnqfG6TBI6UcBJrhrY/eOghgidJNGrq71sJ/y41Ki7jbhbPjKEBZLQiCVb5hW8xRgPubI/B/LjhR/Ppm6UQEibxlx5gsUy9gcBSNWDMOYKpgP5iez6ZPdq1bSmr6L3q+1Hkx4LpuNCJIwbbWkq8CySpCH/XikUOY8jYXxHo0RBuZpzOEA/M5KN+WQ0poX8KYKeqccudA7rL8w8NioCfXIF9fB5fB3ds7yL4E3nL79FRTCct1rjjVvGQLTjK5w0xERVnynM+WbdKRTysdoLKSXgWJpMrMca5TgxeswaytwfJcwKYlRPvl4dSvLocMadDQDkdJ1AOJhuCc4ibx8B+LWJf+CSybMkF3B3FiU2WtVg9yvOg+YlExS5XMcLD8m1EXi/4yJqRanj+0H4jxUPUdn6uPwnbcw/TZ3ukPSpAU61iOROLeBSQb9SyB3ajj28E5rqQJ1l2EeTIxOyaJrXLzakfWwT3oXCKIkdm5b4agECDTLfFsLu52HL0MN+1SwGXII=
+  on:
+    tags: true
