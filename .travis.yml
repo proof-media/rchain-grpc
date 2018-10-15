@@ -23,6 +23,8 @@ before_deploy:
 - sudo git clean -fXd
 deploy:
   provider: pypi
+  on:
+    tags: true
   user: proof-media
   password:
     secure: gMsFKAxNyPqDz05m6xFEafABvxBlki4UK0zgE3qqDAFN+Fgo/SSOHxIn4u2HidC1kYLdVHsab4CIneDcwCdTl5d9CLXVNh6aQbwthlz4vFDMewTm6dqfrWixayN/OmagWFnyTW5ZyX/movWBcQybt0u5h2xEq7t6xTKOVRijV+YT/gwcEIEU0uouJMMiDxFukOx1DpkF+8xqzzyB8iV2F8N4/M9DeLS4flAr5iX+kIXVCNCL920mYbl6uwyZMV+MCc1C8ed/2rCo3XDoRmB3oF6YVc3HA7xnkn/Ojz/NB5eq3AiKS41dPfVnU9TtDDOsq4b+mxRcm9huLl3XuHgDyE8MsSe5jmwe3WzWWN7aNac4kae/iqpA3yGxCTaeMsjhs1bZt4mslWWKnvyleVjF8WsyevwMMwBbwaOSOfMy/QEefq9cfWwuOtTB6JiF1mqA7au3hfahs2d4qlwaNAJC5+E3CWnkf+hbDLy0dQDUipkVaaQwL9WSW/E1oxo0Bk45tAr3ZTKdlRQL8txNemhP2LwXLtc7Xg8GvL1WJVN8225f896sUfBV/9v3X7VrqtPnwiAwNwHi2O3SUK24GtqcLweYLwDRd3yig44gnRukMSqeRVNOBBz5g22p8Jn5RfL3IBnqx+yVODDYvUXlZhJGmHf48LZcHOVs8Kx14URL9gE=
