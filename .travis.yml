@@ -1,29 +1,26 @@
 language: python
 sudo: required
 env:
-  - DOCKER_COMPOSE_VERSION=1.22.0
+- DOCKER_COMPOSE_VERSION=1.22.0
 cache:
   directories:
-    - docker
+  - docker
 before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin/
-  - docker --version
-  - docker-compose --version
+- sudo rm /usr/local/bin/docker-compose
+- curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname
+  -s`-`uname -m` > docker-compose
+- chmod +x docker-compose
+- sudo mv docker-compose /usr/local/bin/
+- docker --version
+- docker-compose --version
 install:
-  - docker-compose build
+- docker-compose build
 script:
-  - docker-compose run --rm tests
+- docker-compose run --rm tests
 after_script:
-  - docker-compose down
+- docker-compose down
 before_deploy:
-  - sudo git clean -fXd
-# deploy:
-#   provider: pypi
-#   user: proof-media
-#   password:
-#     secure: gTSzZrDAkDgBqFl/j8AAT+YhTPkpZKXzXihqjmw8WX5qwGgr+MKtwjjoZrPmNMskxIIGcgTmwh3cXm+0uX1Aee+PGvjxibFSRwM7jbKx/+Yletd1cWVDraY/6Tb11anfuaGtKerCNHuR1u4C0bj49ArFTNqPT3MKSCwsNEmuCwCnqfG6TBI6UcBJrhrY/eOghgidJNGrq71sJ/y41Ki7jbhbPjKEBZLQiCVb5hW8xRgPubI/B/LjhR/Ppm6UQEibxlx5gsUy9gcBSNWDMOYKpgP5iez6ZPdq1bSmr6L3q+1Hkx4LpuNCJIwbbWkq8CySpCH/XikUOY8jYXxHo0RBuZpzOEA/M5KN+WQ0poX8KYKeqccudA7rL8w8NioCfXIF9fB5fB3ds7yL4E3nL79FRTCct1rjjVvGQLTjK5w0xERVnynM+WbdKRTysdoLKSXgWJpMrMca5TgxeswaytwfJcwKYlRPvl4dSvLocMadDQDkdJ1AOJhuCc4ibx8B+LWJf+CSybMkF3B3FiU2WtVg9yvOg+YlExS5XMcLD8m1EXi/4yJqRanj+0H4jxUPUdn6uPwnbcw/TZ3ukPSpAU61iOROLeBSQb9SyB3ajj28E5rqQJ1l2EeTIxOyaJrXLzakfWwT3oXCKIkdm5b4agECDTLfFsLu52HL0MN+1SwGXII=
-#   on:
-#     tags: true
+- sudo git clean -fXd
+deploy:
+  password:
+    secure: gMsFKAxNyPqDz05m6xFEafABvxBlki4UK0zgE3qqDAFN+Fgo/SSOHxIn4u2HidC1kYLdVHsab4CIneDcwCdTl5d9CLXVNh6aQbwthlz4vFDMewTm6dqfrWixayN/OmagWFnyTW5ZyX/movWBcQybt0u5h2xEq7t6xTKOVRijV+YT/gwcEIEU0uouJMMiDxFukOx1DpkF+8xqzzyB8iV2F8N4/M9DeLS4flAr5iX+kIXVCNCL920mYbl6uwyZMV+MCc1C8ed/2rCo3XDoRmB3oF6YVc3HA7xnkn/Ojz/NB5eq3AiKS41dPfVnU9TtDDOsq4b+mxRcm9huLl3XuHgDyE8MsSe5jmwe3WzWWN7aNac4kae/iqpA3yGxCTaeMsjhs1bZt4mslWWKnvyleVjF8WsyevwMMwBbwaOSOfMy/QEefq9cfWwuOtTB6JiF1mqA7au3hfahs2d4qlwaNAJC5+E3CWnkf+hbDLy0dQDUipkVaaQwL9WSW/E1oxo0Bk45tAr3ZTKdlRQL8txNemhP2LwXLtc7Xg8GvL1WJVN8225f896sUfBV/9v3X7VrqtPnwiAwNwHi2O3SUK24GtqcLweYLwDRd3yig44gnRukMSqeRVNOBBz5g22p8Jn5RfL3IBnqx+yVODDYvUXlZhJGmHf48LZcHOVs8Kx14URL9gE=
