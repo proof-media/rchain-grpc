@@ -23,9 +23,12 @@ before_deploy:
 - sudo git clean -fXd
 deploy:
   provider: pypi
+  user: proof-media
+  # distributions: sdist
+  twine_version: 1.12.1 
+  # suggested in 
+  # https://github.com/travis-ci/travis-ci/issues/10056#issuecomment-426260940
   on:
     tags: true
-  user: proof-media
-  distributions: sdist
   password:
     secure: TGWK7HVc6FCm/lF3vSDIFMTaItI+Ble2plWKUadoqVBzFo96BsXkFarJ1JAE9HshEF4kzn8lj66ps/iDqgtFOkDuyRSBDQFMgRyJLgR9gQW3p9Xse06dQwyyodyhXIyTvIZ7eN6+gwuVonFKRrmJWYw84kBrP3s0iea1p0f4K+8fqKYvvx5Q5piucZczSALYOj5ab/DWvpGKCVQL4QOIz6ypDha/pIi1Dg//YTGiNDhJDSUZK6IYK4GlWI9Qy7eSsqcaREQqKAe4TKZtzLRLLYRYO6tHtgR9XdJ+of7NJmmBocGoi56+lgR6lPuk6gx3t20NvTv0Gb/Z8D12YQ6ZDxO1RnhHmZtoQ7RicdCKfPui3Du5tcNQtOkJybYg9Nhc9MBA+GhPNkTBArznI3NDK9wIJcmzxuW5BluzU91EcZmvOGZyrxTgP78HsRnwtWutRspFNNTyBmNTI3DdMtJVmounZYoBJInqGDAZ5j1Y/1rLXXnd1bhjydBzjGhoMFciylYh0LA1F6vklDHUecJuO0Aw+BBisnzGN2v+xXAzF4SloBE2gMlWlj56Zp5P5yqagbZDVB3+ROgFxFhlg/T5sKOUr47ff430xfmtXkbMd5LJtZEJ3uc+23aAR7jucua3iHfulvckhpnH7hoSejzigo8odjGxRZQTETruFXCrASI=
