@@ -67,9 +67,13 @@ def _(message: Message) -> dict:
 
 
 def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
+    # #OLD WAY
+    # proto = grpc_class()
+    # for key, value in d.items():
+    #     setattr(proto, key, value)
+    # #NEW WAY
     proto = grpc_class(**d)
-    for key, value in d.items():
-        setattr(proto, key, value)
+    # print('From dict', proto)
     return proto
 
 

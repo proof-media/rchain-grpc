@@ -10,7 +10,7 @@ from google.protobuf.empty_pb2 import Empty
 from . import rho_types
 from .exceptions import CasperException, TimeoutException
 from .generated import CasperMessage_pb2_grpc
-from .generated.CasperMessage_pb2 import DeployData
+from .generated.CasperMessage_pb2 import DeployData, PhloLimit, PhloPrice
 from .utils import Connection, create_connection_builder, is_equal
 
 
@@ -33,20 +33,21 @@ def deploy(
     connection: Connection,
     term: str,
     from_: str = '0x0',
-    phlo_limit: int = 0,
-    phlo_price: int = 0,
+    phlo_limit: int = 10000000,
+    phlo_price: int = 1,
     nonce: int = 0,
 ) -> dict:
     """works in the same way as `./rnode deploy`
     but expect contract code in `term` argument"""
     dt = datetime.now()
     timestamp = dt.microsecond
+
     deployData = rho_types.from_dict(
         {
             'term': term,
             'from': from_,
-            'phloLimit': phlo_limit,
-            'phloPrice': phlo_price,
+            'phloLimit': rho_types.from_dict({'value': phlo_limit}, PhloLimit),
+            'phloPrice': rho_types.from_dict({'value': phlo_price}, PhloPrice),
             'nonce': nonce,
             'timestamp': timestamp,
         },
