@@ -26,6 +26,10 @@ services:
     working_dir: /project
     entrypoint: ./run_tests.sh
 
+  # DEBUG with:
+  # docker-compose run --rm --entrypoint /bin/bash tests
+  # pip install ipython && pip install --editable . && ipython
+
   tests-rchain:
     networks:
       - tests

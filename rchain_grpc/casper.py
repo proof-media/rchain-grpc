@@ -1,4 +1,4 @@
-import functools
+# import functools
 import json
 import secrets
 import time
@@ -9,8 +9,13 @@ from google.protobuf.empty_pb2 import Empty
 
 from . import rho_types
 from .exceptions import CasperException, TimeoutException
-from .generated import CasperMessage_pb2_grpc
-from .generated.CasperMessage_pb2 import DeployData, PhloLimit, PhloPrice
+from .generated.CasperMessage_pb2_grpc import DeployServiceStub
+from .generated.CasperMessage_pb2 import (
+    BlockQuery,
+    DeployData,
+    PhloLimit,
+    PhloPrice
+)
 from .utils import Connection, create_connection_builder, is_equal
 
 
@@ -20,13 +25,26 @@ def throw_if_not_successful(response: dict, name: str) -> dict:
     return response
 
 
-create_connection = create_connection_builder(CasperMessage_pb2_grpc.DeployServiceStub)
+create_connection = create_connection_builder(DeployServiceStub)
 
 
 def get_blocks(connection: Connection) -> List[dict]:
     """works in the same way as `./rnode show-blocks`"""
     output = connection.showBlocks(Empty())
+    # print(output)
+    # for element in output:
+    #     print("found", element)
     return [rho_types.to_dict(i) for i in output]
+
+
+def get_block(connection: Connection, block_hash: str) -> dict:
+    """works in the same way as `./rnode show-block HASH`"""
+    output = connection.showBlock(
+        # NOTE: should we use plain Python instances
+        # instead of `from_dict`?
+        BlockQuery(hash=block_hash)
+    )
+    return rho_types.to_dict(output).get('blockInfo')
 
 
 def deploy(
