@@ -1,6 +1,15 @@
 version: "3.3"
 
 services:
+
+  generate:
+    image: python:3.7
+    volumes:
+      - ./:/project
+      - cache:/root/.cache/pip
+    working_dir: /project/rchain_grpc
+    entrypoint: ./generate.sh
+
   tests:
     image: python:3.7
     networks:
