@@ -9,7 +9,9 @@ from google.protobuf.internal.containers import (RepeatedCompositeFieldContainer
 from google.protobuf.message import Message
 
 # from .generated.CasperMessage_pb2 import DataWithBlockInfo
-from .generated.RhoTypes_pb2 import Expr
+from .generated.RhoTypes_pb2 import Expr, Par
+# from .generated import RhoTypes_pb2
+from .generated.CasperMessage_pb2 import DataAtNameQuery
 # from .generated.RhoTypes_pb2 import Channel, Par, Var
 
 
@@ -77,12 +79,22 @@ def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
     return proto
 
 
-# def to_channel(objs: list) -> Channel:
-#     par = Par()
-#     par.exprs.extend([expr_from_obj(obj) for obj in objs])
-#     channel = Channel()
-#     channel.quote.CopyFrom(par)
-#     return channel
+##############
+##############
+def to_channel(objs: list) -> DataAtNameQuery:
+    par = Par()
+    # channel = DataAtNameQuery(depth=1)
+    # par = channel.name.__class__()
+    # for obj in objs:
+    #     par.exprs.extend([Expr(g_string=obj)])
+    par.exprs.extend([expr_from_obj(obj) for obj in objs])
+    # print(par)
+    channel = DataAtNameQuery(depth=1, name=par)
+    # channel.CopyFrom(par)
+    # return par
+    return channel
+##############
+##############
 
 
 @functools.singledispatch
