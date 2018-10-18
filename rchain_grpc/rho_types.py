@@ -3,13 +3,14 @@ import json
 from typing import Any, List, Tuple, TypeVar, Union
 
 import toolz
-from google.protobuf.empty_pb2 import Empty
+# from google.protobuf.empty_pb2 import Empty
 from google.protobuf.internal.containers import (RepeatedCompositeFieldContainer,
                                                  RepeatedScalarFieldContainer)
 from google.protobuf.message import Message
 
-from .generated.CasperMessage_pb2 import DataWithBlockInfo
-from .generated.RhoTypes_pb2 import Channel, Expr, Par, Var
+# from .generated.CasperMessage_pb2 import DataWithBlockInfo
+from .generated.RhoTypes_pb2 import Expr
+# from .generated.RhoTypes_pb2 import Channel, Par, Var
 
 
 def e_map_body_to_dict(body):
@@ -65,19 +66,19 @@ def _(message: Message) -> dict:
     return {f[0].name: to_dict(f[1]) for f in message.ListFields()}
 
 
-def from_dict(d: dict, klass: GrpcClass) -> GrpcClass:
-    proto = klass()
+def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
+    proto = grpc_class(**d)
     for key, value in d.items():
         setattr(proto, key, value)
     return proto
 
 
-def to_channel(objs: list) -> Channel:
-    par = Par()
-    par.exprs.extend([expr_from_obj(obj) for obj in objs])
-    channel = Channel()
-    channel.quote.CopyFrom(par)
-    return channel
+# def to_channel(objs: list) -> Channel:
+#     par = Par()
+#     par.exprs.extend([expr_from_obj(obj) for obj in objs])
+#     channel = Channel()
+#     channel.quote.CopyFrom(par)
+#     return channel
 
 
 @functools.singledispatch

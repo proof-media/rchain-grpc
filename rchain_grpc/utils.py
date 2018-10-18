@@ -17,12 +17,12 @@ class Connection(AbstractContextManager, Generic[gRPCStub]):
     def __init__(self, channel: Channel, stub: gRPCStub) -> None:
         # using super for avoiding recursion
         super(Connection, self).__setattr__('connected', True)
-        super(Connection, self).__setattr__('_channel', channel)
+        # super(Connection, self).__setattr__('_channel', channel)
         super(Connection, self).__setattr__('_stub', stub)
 
     def close(self) -> None:
         self._channel.close()
-        del self._channel
+        # del self._channel
         del self._stub
         # using super for avoiding recursion
         super(Connection, self).__setattr__('connected', False)
