@@ -11,10 +11,9 @@ from . import rho_types
 from .exceptions import CasperException, TimeoutException
 from .generated.CasperMessage_pb2_grpc import DeployServiceStub
 from .generated.CasperMessage_pb2 import (
-    BlockQuery,
+    BlockQuery, BlocksQuery,
+    PhloLimit, PhloPrice,
     DeployData,
-    PhloLimit,
-    PhloPrice
 )
 from .utils import Connection, create_connection_builder, is_equal
 
@@ -28,12 +27,9 @@ def throw_if_not_successful(response: dict, name: str) -> dict:
 create_connection = create_connection_builder(DeployServiceStub)
 
 
-def get_blocks(connection: Connection) -> List[dict]:
+def get_blocks(connection: Connection, depth: int = 1) -> List[dict]:
     """works in the same way as `./rnode show-blocks`"""
-    output = connection.showBlocks(Empty())
-    # print(output)
-    # for element in output:
-    #     print("found", element)
+    output = connection.showBlocks(BlocksQuery(depth=depth))
     return [rho_types.to_dict(i) for i in output]
 
 
@@ -103,10 +99,10 @@ def listen_on(
         time.sleep(interval)
 
 
-def get_value_from(connection: Connection, name: str) -> Optional[dict]:
-    """get value from channel on given name"""
-    rchain_channel = rho_types.to_channel([name])
-    output = connection.listenForDataAtName(rchain_channel)
+def get_value_from(connection: Connection, channel_name: str) -> Optional[dict]:
+    """get value from channel on given channel_name"""
+    # rchain_channel = rho_types.to_channel([channel_name])
+    output = connection.listenForDataAtName(channel_name)
     result = rho_types.to_dict(output)
     if 'blockResults' in result:
         return result
