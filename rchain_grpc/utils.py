@@ -21,7 +21,7 @@ class Connection(AbstractContextManager, Generic[gRPCStub]):
         super(Connection, self).__setattr__('_stub', stub)
 
     def close(self) -> None:
-        self._channel.close()
+        # self._channel.close()
         # del self._channel
         del self._stub
         # using super for avoiding recursion
