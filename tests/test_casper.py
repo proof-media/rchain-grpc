@@ -12,9 +12,9 @@ def connection(rchain_host):
         yield conn
 
 
-def test_get_blocks(connection):
-    blocks = casper.get_blocks(connection, depth=100)
-    fields = {
+@pytest.fixture
+def block_fields():
+    return {
         'blockHash',
         'blockSize',
         'blockNumber',
@@ -23,16 +23,34 @@ def test_get_blocks(connection):
         'mainParentHash',
         'parentsHashList',
         'sender',
+        'shardId',
         'tupleSpaceHash',
         'tupleSpaceDump',
         'timestamp',
     }
+
+
+def test_get_blocks(connection, block_fields):
+    blocks = casper.get_blocks(connection, depth=100)
     assert isinstance(blocks, list)
     assert len(blocks) > 0
     for block in blocks:
         # assert fields.issuperset(set(block.keys()))
         for field in block.keys():
-            assert field in fields
+            assert field in block_fields
+
+
+@pytest.fixture
+def block_hash(connection):
+    return casper.get_blocks(connection, depth=1).pop().get('blockHash')
+
+
+def test_get_block(connection, block_hash, block_fields):
+    block = casper.get_block(connection, block_hash)
+    assert isinstance(block, dict)
+    assert len(block) > 0
+    for field in block.keys():
+        assert field in block_fields
 
 
 @pytest.fixture
