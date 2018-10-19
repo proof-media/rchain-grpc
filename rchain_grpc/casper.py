@@ -1,4 +1,5 @@
 # import functools
+import grpc
 import json
 import secrets
 import time
@@ -60,6 +61,7 @@ def deploy(
         {
             'term': term,
             'from': from_,
+            # 'phloLimit': PhloLimit(value=phlo_limit),
             'phloLimit': rho_types.from_dict({'value': phlo_limit}, PhloLimit),
             'phloPrice': rho_types.from_dict({'value': phlo_price}, PhloPrice),
             'nonce': nonce,
@@ -81,13 +83,12 @@ def propose(connection: Connection) -> dict:
 def listen_on(
     connection: Connection, name: str, interval: float = 0.5, timeout: float = 60.0
 ) -> Iterator[dict]:
-    ""
     """listen on channel and return iterator witch values.
     Check channel in every second given in `interval`"""
     old_value = {}
 
-    # TODO: ask rchain dev team for making `showBlocks` streamin infinitly
-    # TODO: use ininite stream from `showBlocks` instead and check only on new block
+    # TODO: ask rchain dev team for making `showBlocks` streaming infinitely
+    # TODO: use infinite stream from `showBlocks` instead and check only on new block
     start_time = time.time()
     while True:
         value = get_value_from(connection, name)
@@ -101,12 +102,20 @@ def listen_on(
 
 def get_value_from(connection: Connection, channel_name: str) -> Optional[dict]:
     """get value from channel on given channel_name"""
-    # rchain_channel = rho_types.to_channel([channel_name])
-    output = connection.listenForDataAtName(channel_name)
-    result = rho_types.to_dict(output)
-    if 'blockResults' in result:
-        return result
-    return None
+    rchain_channel = rho_types.to_channel([channel_name])
+    try:
+        output = connection.listenForDataAtName(rchain_channel)
+    except grpc._channel._Rendezvous:
+        output = None
+        print("Empty")
+    else:
+        # print(dir(output))
+        # return getattr(output, 'blockResults', None)
+        result = rho_types.to_dict(output)
+        if 'blockResults' in result:
+            return result
+        else:
+            return None
 
 
 def run_and_get_value_from(

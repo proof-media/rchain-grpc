@@ -67,22 +67,23 @@ def test_propose(proposed):
     assert 'created and added' in proposed['message']
 
 
-# def test_get_value_from(proposed, rchain_ch_name, rchain_ch_value, connection):
-#     ret = casper.get_value_from(connection, rchain_ch_name)
-#     # TODO: test with channels with more data and figure out how to remove
-#     #       this nested list from here
-#     assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
+def test_get_value_from(proposed, rchain_ch_name, rchain_ch_value, connection):
+    ret = casper.get_value_from(connection, rchain_ch_name)
+    # print(ret)
+    # TODO: test with channels with more data and figure out how to remove
+    #       this nested list from here
+    assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
 
 
-# def test_get_value_from_empty_channel(connection, rchain_ch_name):
-#     ret = casper.get_value_from(connection, f'not-{rchain_ch_name}')
-#     assert ret == None
+def test_get_value_from_empty_channel(connection, rchain_ch_name):
+    ret = casper.get_value_from(connection, f'not-{rchain_ch_name}')
+    assert ret is None
 
 
-# def test_run_and_get_value_from(connection, rchain_ch_value):
-#     term = f'proof_output!("{rchain_ch_value}")'
-#     ret = casper.run_and_get_value_from(connection, term)
-#     assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
+def test_run_and_get_value_from(connection, rchain_ch_value):
+    term = f'proof_output!("{rchain_ch_value}")'
+    ret = casper.run_and_get_value_from(connection, term)
+    assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
 
 
 # def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):

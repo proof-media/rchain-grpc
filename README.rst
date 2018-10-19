@@ -32,6 +32,12 @@ Features
 
 * TODO
 
+Versioning
+--------
+
+* 0.0.10 is compatible with RNode 0.6.x
+* 0.0.11 will be compatible with RNode 0.7.x
+
 Credits
 -------
 
