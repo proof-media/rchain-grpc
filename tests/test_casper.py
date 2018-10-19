@@ -86,44 +86,44 @@ def test_run_and_get_value_from(connection, rchain_ch_value):
     assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
 
 
-# def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):
-#     def run():
-#         return next(casper.listen_on(connection, rchain_ch_name))
+def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):
+    def run():
+        return next(casper.listen_on(connection, rchain_ch_name))
 
-#     with futures.ThreadPoolExecutor() as executor:
-#         future = executor.submit(run)
-#         proposed(connection, deployed)
-#         assert future.result(timeout=5)['blockResults'][0]['postBlockData'] == [
-#             [rchain_ch_value]
-#         ]
-
-
-# def test_listen_on_timeout_if_not_deployed_and_proposed(connection, rchain_ch_name):
-#     with pytest.raises(exceptions.TimeoutException) as ex:
-#         next(casper.listen_on(connection, rchain_ch_name, timeout=1))
+    with futures.ThreadPoolExecutor() as executor:
+        future = executor.submit(run)
+        proposed(connection, deployed)
+        assert future.result(timeout=5)['blockResults'][0]['postBlockData'] == [
+            [rchain_ch_value]
+        ]
 
 
-# @pytest.mark.parametrize(
-#     'args,expected',
-#     [
-#         ('true', [[True]]),
-#         ('false', [[False]]),
-#         ('1, false', [[1], [False]]),
-#         ('{}.set("x", 24).set("y", "value")', [[{'x': 24, 'y': 'value'}]]),
-#     ],
-# )
-# def test_value_conversion(args, expected, connection):
-#     term = f'proof_output!({args})'
-#     ret = casper.run_and_get_value_from(connection, term)
-#     assert ret['blockResults'][0]['postBlockData'] == expected
+def test_listen_on_timeout_if_not_deployed_and_proposed(connection, rchain_ch_name):
+    with pytest.raises(exceptions.TimeoutException):
+        next(casper.listen_on(connection, rchain_ch_name, timeout=1))
 
 
-# @pytest.mark.parametrize("contract", ["add1", ["add", "1"]])
-# def test_run_contract(contract, connection, add_contract_path):
-#     number = random.randint(100, 1000)
-#     with open(add_contract_path) as contract_file:
-#         term = contract_file.read()
-#     casper.deploy(connection, term)
-#     casper.propose(connection)
-#     result = casper.run_contract(connection, contract, [number])
-#     assert result['blockResults'][0]['postBlockData'][0][0] == number + 1
+@pytest.mark.parametrize(
+    'args,expected',
+    [
+        ('true', [[True]]),
+        ('false', [[False]]),
+        ('1, false', [[1], [False]]),
+        ('{}.set("x", 24).set("y", "value")', [[{'x': 24, 'y': 'value'}]]),
+    ],
+)
+def test_value_conversion(args, expected, connection):
+    term = f'proof_output!({args})'
+    ret = casper.run_and_get_value_from(connection, term)
+    assert ret['blockResults'][0]['postBlockData'] == expected
+
+
+@pytest.mark.parametrize("contract", ["add1", ["add", "1"]])
+def test_run_contract(contract, connection, add_contract_path):
+    number = random.randint(100, 1000)
+    with open(add_contract_path) as contract_file:
+        term = contract_file.read()
+    casper.deploy(connection, term)
+    casper.propose(connection)
+    result = casper.run_contract(connection, contract, [number])
+    assert result['blockResults'][0]['postBlockData'][0][0] == number + 1
