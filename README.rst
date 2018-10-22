@@ -32,6 +32,20 @@ Features
 
 * TODO
 
+Media
+-----
+
+-  `Recorded walk-through`_ and `slides`_ for the rchain discord
+   community
+-  `Notebook examples`_ running on this `container image`_ (see also
+   `Dockerfile`_)
+
+.. _Recorded walk-through: youtu.be/H_pmVff7c3Q
+.. _slides: https://nbviewer.jupyter.org/format/slides/github/proof-media/rchain-notebook/blob/master/notebooks/walk-through.ipynb#/
+.. _Notebook examples: https://github.com/proof-media/rchain-notebook
+.. _container image: https://hub.docker.com/r/proofmedia/rchain-notebook/
+.. _Dockerfile: https://github.com/proof-media/rchain-notebook/tree/master/builds/notebooker
+
 Credits
 -------
 
