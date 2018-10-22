@@ -1,3 +1,4 @@
+
 =======
 Credits
 =======
@@ -10,4 +11,4 @@ Development Lead
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Paolo D'Onorio De Meo <paolo@proofmedia.io>
