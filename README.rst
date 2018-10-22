@@ -38,6 +38,20 @@ Versioning
 * 0.0.10 is compatible with RNode 0.6.x
 * 0.0.11 will be compatible with RNode 0.7.x
 
+Upgrading gRPC client descriptors
+-------
+
+When a new version from RChain gets released,
+protobuf definitions / descriptors must be updated.
+
+This can be done selecting a new RNODE_RELEASE in env file
+and running:
+
+.. code:: bash
+
+   docker-compose run --rm generate
+
+
 Credits
 -------
 

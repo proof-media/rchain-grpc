@@ -107,7 +107,7 @@ def get_value_from(connection: Connection, channel_name: str) -> Optional[dict]:
         output = connection.listenForDataAtName(rchain_channel)
     except grpc._channel._Rendezvous:
         output = None
-        print("Empty")
+        # print("Empty")
     else:
         # print(dir(output))
         # return getattr(output, 'blockResults', None)
