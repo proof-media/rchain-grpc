@@ -1,4 +1,3 @@
-# import functools
 import grpc
 import json
 import secrets

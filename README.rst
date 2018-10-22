@@ -35,8 +35,9 @@ Features
 Versioning
 --------
 
-* 0.0.10 is compatible with RNode 0.6.x
-* 0.0.11 will be compatible with RNode 0.7.x
+* 0.0.10 was compatible with RNode 0.6.x
+* 0.0.11 is be compatible with RNode 0.7.x
+* 0.0.? will be compatible with RNode 0.8.x
 
 Upgrading gRPC client descriptors
 -------
