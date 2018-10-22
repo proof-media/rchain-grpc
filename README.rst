@@ -1,3 +1,4 @@
+
 ===========
 rchain-grpc
 ===========
@@ -9,22 +10,17 @@ rchain-grpc
 .. image:: https://travis-ci.com/proof-media/rchain-grpc.svg?branch=master
     :target: https://travis-ci.com/proof-media/rchain-grpc
 
-.. image:: https://readthedocs.org/projects/rchain-grpc/badge/?version=latest
-    :target: https://rchain-grpc.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
-
-
 .. image:: https://pyup.io/repos/github/proof-media/rchain-grpc/shield.svg
     :target: https://pyup.io/repos/github/proof-media/rchain-grpc/
     :alt: Updates
 
 
 
-python client to rchain gRPC
+Python3 client for RChain nodes gRPC protocol
 
 
 * Free software: MIT license
-* Documentation: https://rchain-grpc.readthedocs.io.
+* Documentation: https://proof-media.github.io/rchain-grpc
 
 
 Features
@@ -39,7 +35,21 @@ Versioning
 * 0.0.11 is be compatible with RNode 0.7.x
 * 0.0.? will be compatible with RNode 0.8.x
 
-Upgrading gRPC client descriptors
+Media
+-----
+
+-  `Recorded walk-through`_ and `slides`_ for the rchain discord
+   community
+-  `Notebook examples`_ running on this `container image`_ (see also
+   `Dockerfile`_)
+
+.. _Recorded walk-through: youtu.be/H_pmVff7c3Q
+.. _slides: https://nbviewer.jupyter.org/format/slides/github/proof-media/rchain-notebook/blob/master/notebooks/walk-through.ipynb#/
+.. _Notebook examples: https://github.com/proof-media/rchain-notebook
+.. _container image: https://hub.docker.com/r/proofmedia/rchain-notebook/
+.. _Dockerfile: https://github.com/proof-media/rchain-notebook/tree/master/builds/notebooker
+
+Compiling
 -------
 
 When a new version from RChain gets released,
