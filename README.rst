@@ -24,7 +24,7 @@ python client to rchain gRPC
 
 
 * Free software: MIT license
-* Documentation: https://rchain-grpc.readthedocs.io.
+* Documentation: https://proof-media.github.io/rchain-grpc
 
 
 Features
