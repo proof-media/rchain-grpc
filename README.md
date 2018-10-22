@@ -1,20 +1,16 @@
 
-## rchain-grpc
+## rchain-grpc
 
-[![image](https://img.shields.io/pypi/v/rchain-grpc.svg)](https://pypi.python.org/pypi/rchain-grpc)
-
-[![image](https://travis-ci.com/proof-media/rchain-grpc.svg?branch=master)](https://travis-ci.com/proof-media/rchain-grpc)
-
-[![Documentation Status](https://readthedocs.org/projects/rchain-grpc/badge/?version=latest)](https://rchain-grpc.readthedocs.io/en/latest/?badge=latest)
-
-[![Updates](https://pyup.io/repos/github/proof-media/rchain-grpc/shield.svg)](https://pyup.io/repos/github/proof-media/rchain-grpc/)
+| package | tests | updates |
+| --- | --- | --- |
+| [![image](https://img.shields.io/pypi/v/rchain-grpc.svg)](https://pypi.python.org/pypi/rchain-grpc) | [![image](https://travis-ci.com/proof-media/rchain-grpc.svg?branch=master)](https://travis-ci.com/proof-media/rchain-grpc) | [![Updates](https://pyup.io/repos/github/proof-media/rchain-grpc/shield.svg)](https://pyup.io/repos/github/proof-media/rchain-grpc/)
 
 Python3 client for RChain nodes gRPC protocol
 
 *   Free software: MIT license
 *   Documentation: [https://proof-media.github.io/rchain-grpc](https://proof-media.github.io/rchain-grpc)
 
-## Features
+## Features
 
 *   TODO
 
