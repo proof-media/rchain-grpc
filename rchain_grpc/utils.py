@@ -15,16 +15,16 @@ class Connection(AbstractContextManager, Generic[gRPCStub]):
     and can be usee as context manager"""
 
     def __init__(self, channel: Channel, stub: gRPCStub) -> None:
-        # using super for avoiding recursion
+        # NOTE: using super to avoid recursion
         super(Connection, self).__setattr__('connected', True)
-        # super(Connection, self).__setattr__('_channel', channel)
+        super(Connection, self).__setattr__('_channel', channel)
         super(Connection, self).__setattr__('_stub', stub)
 
     def close(self) -> None:
-        # self._channel.close()
-        # del self._channel
+        self._channel.close()
+        del self._channel
         del self._stub
-        # using super for avoiding recursion
+        # NOTE: using super to avoid recursion
         super(Connection, self).__setattr__('connected', False)
 
     def __getattr__(self, key: str) -> Any:
