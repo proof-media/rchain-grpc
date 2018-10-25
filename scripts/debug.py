@@ -11,13 +11,12 @@ print(connection)
 
 #########
 logs = []
-rholang_code = """
-new print(`rho:io:stdout`) in { print!("Hello World!") }
-"""
+rholang_code = """new print(`rho:io:stdout`) in { print!("Hello World!") }"""
 
 # #########
 # EVAL/REPL not working...
 # logs.append(repl.eval(connection=connection, program=rholang_code))
+# logs.append(repl.run(connection=connection, line=rholang_code))
 # pprint(logs)
 
 #########

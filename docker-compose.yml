@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   generate:
-    image: python:3.7
+    image: python:${MAIN_SUPPORTED_PYTHON_VERSION}
     volumes:
       - ./:/project
       - cache:/root/.cache/pip
@@ -13,7 +13,7 @@ services:
       RNODE_RELEASE: ${RNODE_RELEASE}
 
   tests:
-    image: python:3.7
+    image: python:${MAIN_SUPPORTED_PYTHON_VERSION}
     networks:
       - tests
     depends_on:
@@ -26,9 +26,9 @@ services:
     working_dir: /project
     entrypoint: ./run_tests.sh
 
-  # DEBUG with:
-  # docker-compose run --rm --entrypoint /bin/bash tests
-  # pip install ipython && pip install --editable . && ipython
+  # NOTE: access a working shell with
+  # $ docker-compose run --rm --entrypoint /bin/bash tests
+  # $ pip install ipython && pip install --editable . && ipython
 
   tests-rchain:
     networks:
