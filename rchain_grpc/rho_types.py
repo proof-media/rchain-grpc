@@ -4,10 +4,10 @@ from typing import Any, List, Tuple, TypeVar, Union
 
 import toolz
 from google.protobuf.empty_pb2 import Empty
-from google.protobuf.internal.containers import (RepeatedCompositeFieldContainer,
-                                                 RepeatedScalarFieldContainer)
 from google.protobuf.message import Message
 
+from ._grpc_containers import (RepeatedCompositeFieldContainer,
+                               RepeatedScalarFieldContainer)
 from .generated.CasperMessage_pb2 import DataWithBlockInfo
 from .generated.RhoTypes_pb2 import Channel, Expr, Par, Var
 
