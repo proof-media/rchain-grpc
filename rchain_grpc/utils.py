@@ -16,30 +16,30 @@ class Connection(AbstractContextManager, Generic[gRPCStub]):
 
     def __init__(self, channel: Channel, stub: gRPCStub) -> None:
         # NOTE: using super to avoid recursion
-        super(Connection, self).__setattr__('connected', True)
-        super(Connection, self).__setattr__('_channel', channel)
-        super(Connection, self).__setattr__('_stub', stub)
+        super().__setattr__('connected', True)
+        super().__setattr__('_channel', channel)
+        super().__setattr__('_stub', stub)
 
     def close(self) -> None:
         self._channel.close()
         del self._channel
         del self._stub
         # NOTE: using super to avoid recursion
-        super(Connection, self).__setattr__('connected', False)
+        super().__setattr__('connected', False)
 
     def __getattr__(self, key: str) -> Any:
-        if not self.connected:
+        if not object.__getattribute__(self, 'connected'):
             raise ConnectionClosedException()
         return getattr(self._stub, key)
 
     def __setattr__(self, key: str, val: Any) -> None:
-        if not self.connected:
+        if not object.__getattribute__(self, 'connected'):
             raise ConnectionClosedException()
         setattr(self._stub, key, val)
 
     def __exit__(self, *args, **kwargs) -> None:
         self.close()
-        return super(Connection, self).__exit__(*args, **kwargs)
+        return super().__exit__(*args, **kwargs)
 
 
 def create_connection(

@@ -3,16 +3,15 @@ import json
 from typing import Any, List, Tuple, TypeVar, Union
 
 import toolz
-# from google.protobuf.empty_pb2 import Empty
-from google.protobuf.internal.containers import (RepeatedCompositeFieldContainer,
-                                                 RepeatedScalarFieldContainer)
-from google.protobuf.message import Message
 
+# from google.protobuf.empty_pb2 import Empty
 # from .generated.CasperMessage_pb2 import DataWithBlockInfo
-from .generated.RhoTypes_pb2 import Expr, Par
-# from .generated import RhoTypes_pb2
-from .generated.CasperMessage_pb2 import DataAtNameQuery
+from google.protobuf.message import Message
+from ._grpc_containers import (RepeatedCompositeFieldContainer,
+                               RepeatedScalarFieldContainer)
 # from .generated.RhoTypes_pb2 import Channel, Par, Var
+from .generated.RhoTypes_pb2 import Expr, Par
+from .generated.CasperMessage_pb2 import DataAtNameQuery
 
 
 def e_map_body_to_dict(body):
@@ -69,32 +68,26 @@ def _(message: Message) -> dict:
 
 
 def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
-    # #OLD WAY
+    # TODO: check me again
+
+    ##########
+    # OLD WAY
     # proto = grpc_class()
     # for key, value in d.items():
     #     setattr(proto, key, value)
-    # #NEW WAY
+    ##########
+    # NEW WAY
     proto = grpc_class(**d)
     # print('From dict', proto)
+
     return proto
 
 
-##############
-##############
 def to_channel(objs: list) -> DataAtNameQuery:
     par = Par()
-    # channel = DataAtNameQuery(depth=1)
-    # par = channel.name.__class__()
-    # for obj in objs:
-    #     par.exprs.extend([Expr(g_string=obj)])
     par.exprs.extend([expr_from_obj(obj) for obj in objs])
-    # print(par)
     channel = DataAtNameQuery(depth=1, name=par)
-    # channel.CopyFrom(par)
-    # return par
     return channel
-##############
-##############
 
 
 @functools.singledispatch

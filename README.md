@@ -12,7 +12,10 @@ Python3 client for RChain nodes gRPC protocol
 
 ## Features
 
-*   TODO
+*   Connect to RChain `rnode` through gRPC protocol
+*   Show block(s)
+*   Deploy Rholand contracts and propose new blocks
+*   Listen for streams of data when proposing blocks
 
 ## Media
 
@@ -24,17 +27,3 @@ Python3 client for RChain nodes gRPC protocol
 * Releases <= `0.0.10` were compatible with `RNode 0.6.x`
 * `0.0.11` is compatible with `RNode 0.7.x`
 * `0.0.?` will be compatible with `RNode 0.8.x`
-
-
-## Compiling
-
-When a new version from RChain gets released,
-protobuf definitions / descriptors must be updated.
-
-This can be done selecting a new RNODE_RELEASE in env file
-and running:
-
-```bash
-docker-compose run --rm generate
-```
-
