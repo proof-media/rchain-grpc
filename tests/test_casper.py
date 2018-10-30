@@ -3,7 +3,7 @@ import secrets
 from concurrent import futures
 
 import pytest
-from rchain_grpc import casper, exceptions
+from rchain_grpc import casper, exceptions, rho_types
 
 
 @pytest.fixture
@@ -87,10 +87,10 @@ def test_propose(proposed):
 
 def test_get_value_from(proposed, rchain_ch_name, rchain_ch_value, connection):
     ret = casper.get_value_from(connection, rchain_ch_name)
-    # print(ret)
     # TODO: test with channels with more data and figure out how to remove
     #       this nested list from here
-    assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
+    par = rho_types.to_dict(ret.get('blockResults')[0]).get('postBlockData')[0]
+    assert par.exprs[0].g_string == rchain_ch_value
 
 
 def test_get_value_from_empty_channel(connection, rchain_ch_name):
@@ -101,7 +101,9 @@ def test_get_value_from_empty_channel(connection, rchain_ch_name):
 def test_run_and_get_value_from(connection, rchain_ch_value):
     term = f'proof_output!("{rchain_ch_value}")'
     ret = casper.run_and_get_value_from(connection, term)
-    assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
+    # assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
+    par = rho_types.to_dict(ret.get('blockResults')[0]).get('postBlockData')[0]
+    assert par.exprs[0].g_string == rchain_ch_value
 
 
 def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):
@@ -111,9 +113,10 @@ def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):
     with futures.ThreadPoolExecutor() as executor:
         future = executor.submit(run)
         proposed(connection, deployed)
-        assert future.result(timeout=5)['blockResults'][0]['postBlockData'] == [
-            [rchain_ch_value]
-        ]
+        ret = future.result(timeout=5)
+        # assert ret['blockResults'][0]['postBlockData'] == [[rchain_ch_value]]
+        par = rho_types.to_dict(ret.get('blockResults')[0]).get('postBlockData')[0]
+        assert par.exprs[0].g_string == rchain_ch_value
 
 
 def test_listen_on_timeout_if_not_deployed_and_proposed(connection, rchain_ch_name):

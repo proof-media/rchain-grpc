@@ -11,7 +11,15 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=6.0', 'toolz', 'grpcio', 'googleapis-common-protos']
+requirements = [
+    'Click>=6.0',
+    'toolz',
+    'grpcio',
+    'googleapis-common-protos',
+    # 'protobuf==3.6.1',
+    # 'grpcio==1.16.0',
+    # 'grpcio-tools==1.16.0',
+]
 
 setup_requirements = ['pytest-runner']
 
