@@ -1,8 +1,22 @@
 version: "3.3"
 
 services:
-  tests:
+  tests-37:
     image: python:3.7
+    networks:
+      - tests
+    depends_on:
+      - tests-rchain
+    volumes:
+      - ./:/project
+      - cache:/root/.cache/pip
+    environment:
+      - RCHAIN_GRPC_HOST=tests-rchain
+    working_dir: /project
+    entrypoint: ./run_tests.sh
+
+  tests-36:
+    image: python:3.6
     networks:
       - tests
     depends_on:
