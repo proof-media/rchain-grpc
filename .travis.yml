@@ -16,7 +16,8 @@ before_install:
 install:
 - docker-compose build
 script:
-- docker-compose run --rm tests
+- docker-compose run --rm tests-36
+- docker-compose run --rm tests-37
 after_script:
 - docker-compose down --rmi all --volumes --remove-orphans
 before_deploy:

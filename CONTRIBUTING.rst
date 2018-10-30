@@ -73,7 +73,7 @@ Ready to contribute? Here's how to set up `rchain_grpc` for local development.
 
 5. When you're done making changes, check that your changes pass tests::
 
-    $ docker-compose run --rm tests  # in other terminal
+    $ docker-compose run --rm tests-36 && docker-compose run --rm tests-37  # in other terminal
 
 6. Commit your changes and push your branch to GitHub::
 
