@@ -45,6 +45,7 @@ time.sleep(3)
 #########
 print("deploy", casper.deploy(connection, rholang_code))
 print("propose", casper.propose(connection))
+# not working
 stream = casper.listen_on(connection, channel_name)
 block = next(stream)
 

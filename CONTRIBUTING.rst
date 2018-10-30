@@ -127,6 +127,6 @@ Debugging
 
 You can access a working shell on docker with::
 
-    $ docker-compose run --rm --entrypoint /bin/bash tests
+    $ docker-compose run --rm --entrypoint /bin/bash tests-37
     $ pip install ipython && pip install --editable . && ipython
     # [ipython shell]

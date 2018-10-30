@@ -46,7 +46,7 @@ services:
     build:
       context: ./rchain
       args:
-        image_tag: release-rnode-v${RNODE_RELEASE}
+        image_tag: ${RNODE_RELEASE}
 
 networks:
   tests:
