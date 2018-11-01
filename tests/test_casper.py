@@ -27,13 +27,14 @@ def block_fields():
         'tupleSpaceHash',
         'tupleSpaceDump',
         'timestamp',
+        'version',
     }
 
 
 @pytest.fixture
 def rchain_ch_name():
-    sufix = secrets.token_hex(5)
-    return f'ch_name_{sufix}'
+    suffix = secrets.token_hex(5)
+    return f'ch_name_{suffix}'
 
 
 @pytest.fixture
