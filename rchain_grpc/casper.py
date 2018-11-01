@@ -91,6 +91,7 @@ def listen_on(
     start_time = time.time()
     while True:
         value = get_value_from(connection, name)
+        # breakpoint()
         if value is not None and not is_equal(value, old_value):
             yield value
             old_value = value
@@ -105,12 +106,21 @@ def get_value_from(connection: Connection, channel_name: str) -> Optional[dict]:
     try:
         output = connection.listenForDataAtName(rchain_channel)
     except grpc._channel._Rendezvous:
-        output = None
+        return None
         # print("Empty")
     else:
+
         # print(dir(output))
         # return getattr(output, 'blockResults', None)
-        result = rho_types.to_dict(output)
+
+        # from google.protobuf.json_format import MessageToJson
+        # result = json.loads(MessageToJson(output))
+        from google.protobuf.json_format import MessageToDict
+        result = MessageToDict(output)
+
+        # # result = rho_types.to_dict(output)
+        # result = rho_types.to_dict(my_dict)
+        # print(result)
         if 'blockResults' in result:
             return result
         else:

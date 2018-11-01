@@ -15,9 +15,8 @@ from .generated.CasperMessage_pb2 import DataAtNameQuery
 
 
 def e_map_body_to_dict(body):
-    kvs = body['kvs']
     ret = {}
-    for kv in kvs:
+    for kv in body.get('kvs'):
         k = toolz.get_in(['key', 0], kv)
         v = toolz.get_in(['value', 0], kv)
         ret[k] = v
@@ -32,16 +31,6 @@ GrpcClass = TypeVar('GrpcClass')
 def expr_to_obj(expr: dict) -> dict:
     type_, value = toolz.first(expr.items())
     return expr_to_obj_mapping.get(type_, toolz.identity)(value)
-
-
-@functools.singledispatch
-def expr_from_obj(_: Any) -> None:
-    raise ValueError(f'unknown type {type(_)}')
-
-
-@expr_from_obj.register(str)
-def _(s: str) -> Expr:
-    return from_dict({'g_string': s}, Expr)
 
 
 @functools.singledispatch
@@ -65,6 +54,16 @@ def _(message: Message) -> dict:
     if exprs is not None:
         return [expr_to_obj(expr) for expr in to_dict(exprs)]
     return {f[0].name: to_dict(f[1]) for f in message.ListFields()}
+
+
+@functools.singledispatch
+def expr_from_obj(_: Any) -> None:
+    raise ValueError(f'unknown type {type(_)}')
+
+
+@expr_from_obj.register(str)
+def _(s: str) -> Expr:
+    return from_dict({'g_string': s}, Expr)
 
 
 def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
