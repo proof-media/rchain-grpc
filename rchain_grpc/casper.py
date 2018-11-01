@@ -1,4 +1,4 @@
-import grpc
+
 import json
 import secrets
 import time
@@ -9,12 +9,14 @@ from google.protobuf.empty_pb2 import Empty
 
 from . import rho_types
 from .exceptions import CasperException, TimeoutException
+
 from .generated.CasperMessage_pb2_grpc import DeployServiceStub
 from .generated.CasperMessage_pb2 import (
     BlockQuery, BlocksQuery,
     PhloLimit, PhloPrice,
     DeployData,
 )
+
 from .utils import Connection, create_connection_builder, is_equal
 
 
@@ -36,8 +38,6 @@ def get_blocks(connection: Connection, depth: int = 1) -> List[dict]:
 def get_block(connection: Connection, block_hash: str) -> dict:
     """works in the same way as `./rnode show-block HASH`"""
     output = connection.showBlock(
-        # NOTE: should we use plain Python instances
-        # instead of `from_dict`?
         BlockQuery(hash=block_hash)
     )
     return rho_types.to_dict(output).get('blockInfo')
@@ -55,14 +55,12 @@ def deploy(
     but expect contract code in `term` argument"""
     dt = datetime.now()
     timestamp = dt.microsecond
-
     deployData = rho_types.from_dict(
         {
             'term': term,
             'from': from_,
-            # 'phloLimit': PhloLimit(value=phlo_limit),
-            'phloLimit': rho_types.from_dict({'value': phlo_limit}, PhloLimit),
-            'phloPrice': rho_types.from_dict({'value': phlo_price}, PhloPrice),
+            'phloLimit': PhloLimit(value=phlo_limit),
+            'phloPrice': PhloPrice(value=phlo_price),
             'nonce': nonce,
             'timestamp': timestamp,
         },
@@ -82,6 +80,7 @@ def propose(connection: Connection) -> dict:
 def listen_on(
     connection: Connection, name: str, interval: float = 0.5, timeout: float = 60.0
 ) -> Iterator[dict]:
+    ""
     """listen on channel and return iterator witch values.
     Check channel in every second given in `interval`"""
     old_value = {}
@@ -91,7 +90,6 @@ def listen_on(
     start_time = time.time()
     while True:
         value = get_value_from(connection, name)
-        # breakpoint()
         if value is not None and not is_equal(value, old_value):
             yield value
             old_value = value
@@ -100,31 +98,17 @@ def listen_on(
         time.sleep(interval)
 
 
-def get_value_from(connection: Connection, channel_name: str) -> Optional[dict]:
-    """get value from channel on given channel_name"""
-    rchain_channel = rho_types.to_channel([channel_name])
-    try:
-        output = connection.listenForDataAtName(rchain_channel)
-    except grpc._channel._Rendezvous:
-        return None
-        # print("Empty")
-    else:
-
-        # print(dir(output))
-        # return getattr(output, 'blockResults', None)
-
-        # from google.protobuf.json_format import MessageToJson
-        # result = json.loads(MessageToJson(output))
-        from google.protobuf.json_format import MessageToDict
-        result = MessageToDict(output)
-
-        # # result = rho_types.to_dict(output)
-        # result = rho_types.to_dict(my_dict)
-        # print(result)
-        if 'blockResults' in result:
-            return result
-        else:
-            return None
+def get_value_from(connection: Connection, name: str) -> Optional[dict]:
+    """get value from channel on given name"""
+    rchain_channel = rho_types.to_channel([name])
+    output = connection.listenForDataAtName(rchain_channel)
+    # from google.protobuf.json_format import MessageToDict
+    # result = MessageToDict(output)
+    # print(result)
+    result = rho_types.to_dict(output)
+    if 'blockResults' in result:
+        return result
+    return None
 
 
 def run_and_get_value_from(

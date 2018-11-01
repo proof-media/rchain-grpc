@@ -3,13 +3,14 @@ import json
 from typing import Any, List, Tuple, TypeVar, Union
 
 import toolz
-
-# from google.protobuf.empty_pb2 import Empty
-# from .generated.CasperMessage_pb2 import DataWithBlockInfo
 from google.protobuf.message import Message
+
 from ._grpc_containers import (RepeatedCompositeFieldContainer,
                                RepeatedScalarFieldContainer)
-# from .generated.RhoTypes_pb2 import Channel, Par, Var
+# VERY STRANGE
+from google.protobuf.pyext._message import \
+    RepeatedCompositeContainer, RepeatedScalarContainer
+
 from .generated.RhoTypes_pb2 import Expr, Par
 from .generated.CasperMessage_pb2 import DataAtNameQuery
 
@@ -35,7 +36,18 @@ def expr_to_obj(expr: dict) -> dict:
 
 @functools.singledispatch
 def to_dict(other: Any) -> Any:
+    # print("Who am I?", other, type(other))
     return other
+
+
+@to_dict.register(RepeatedCompositeContainer)
+def _(container: RepeatedCompositeContainer) -> List[dict]:
+    return [to_dict(e) for e in container]
+
+
+@to_dict.register(RepeatedScalarContainer)
+def _(container: RepeatedScalarContainer) -> List[dict]:
+    return [to_dict(e) for e in container]
 
 
 @to_dict.register(RepeatedCompositeFieldContainer)
@@ -56,6 +68,10 @@ def _(message: Message) -> dict:
     return {f[0].name: to_dict(f[1]) for f in message.ListFields()}
 
 
+def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
+    return grpc_class(**d)
+
+
 @functools.singledispatch
 def expr_from_obj(_: Any) -> None:
     raise ValueError(f'unknown type {type(_)}')
@@ -64,22 +80,6 @@ def expr_from_obj(_: Any) -> None:
 @expr_from_obj.register(str)
 def _(s: str) -> Expr:
     return from_dict({'g_string': s}, Expr)
-
-
-def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
-    # TODO: check me again
-
-    ##########
-    # OLD WAY
-    # proto = grpc_class()
-    # for key, value in d.items():
-    #     setattr(proto, key, value)
-    ##########
-    # NEW WAY
-    proto = grpc_class(**d)
-    # print('From dict', proto)
-
-    return proto
 
 
 def to_channel(objs: list) -> DataAtNameQuery:
