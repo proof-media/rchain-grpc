@@ -39,3 +39,5 @@ touch $PY/scalapb/__init__.py # make scalapb python package
 touch $PY/__init__.py         # make generated python package
 
 rm -rf $TMP
+
+echo done
