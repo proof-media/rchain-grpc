@@ -7,7 +7,8 @@ from google.protobuf.message import Message
 
 from ._grpc_containers import (RepeatedCompositeFieldContainer,
                                RepeatedScalarFieldContainer)
-# VERY STRANGE
+
+# TODO: please check, but without it doesn't work
 from google.protobuf.pyext._message import \
     RepeatedCompositeContainer, RepeatedScalarContainer
 
@@ -40,11 +41,13 @@ def to_dict(other: Any) -> Any:
     return other
 
 
+# TODO: please check, but without it doesn't work
 @to_dict.register(RepeatedCompositeContainer)
 def _(container: RepeatedCompositeContainer) -> List[dict]:
     return [to_dict(e) for e in container]
 
 
+# TODO: please check, but without it doesn't work
 @to_dict.register(RepeatedScalarContainer)
 def _(container: RepeatedScalarContainer) -> List[dict]:
     return [to_dict(e) for e in container]
