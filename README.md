@@ -55,14 +55,58 @@ Rchain is beeing developed as we speak, be careful on which version of this pack
 * etc.
 
 
+## Installation
+
+Recommended way to install the package is to use the official python package manager, e.g. from command line:
+
+```bash
+pip install rchain-grpc
+```
+
+You can also download the package in the [Pypi web site](https://pypi.org/project/rchain-grpc/#files).
+
+
 ## Code examples
 
-This project is a wrapper to simplify the use of gRPC interaction with RChain networks. The use cases are very simple!
+This project is a wrapper to simplify the use of gRPC interaction with RChain networks. Here we describe now the main examples you can use it with.
 
-### bla
 
-bla
+### create a connection to a running node
 
+To connect to a running RChain Casper network you need to create the connection object:
+
+```python
+from rchain_grpc import casper
+
+rnode_host = '...'  # valid IP of running node
+rnode_port = 40401  # default
+connection = casper.create_connection(host=rnode_host, port=rnode_port)
+```
+
+
+### deploy a rholang contract
+
+to do
+
+
+### get blocks
+
+to do
+
+
+### context manager
+
+to do
+
+
+### interact with channels
+
+to do
+
+
+### name registry
+
+to do
 
 
 ## Other media
