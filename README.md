@@ -65,6 +65,19 @@ pip install rchain-grpc
 
 You can also download the package in the [Pypi web site](https://pypi.org/project/rchain-grpc/#files).
 
+NOTE: you can test the library by just running a docker container:
+```bash
+docker run \
+    --rm --interactive --tty --entrypoint /bin/bash \
+    python:3.7 \
+    -c "pip install rchain-grpc ipython && ipython"
+
+In [1]: import rchain_grpc
+
+In [2]: rchain_grpc.__version__
+Out[2]: '0.7.0'
+```
+
 
 ## Code examples
 
@@ -86,7 +99,22 @@ connection = casper.create_connection(host=rnode_host, port=rnode_port)
 
 ### deploy a rholang contract
 
-to do
+Contracts written in `rholang` use the `.rho` file extension.
+You can read one and deploy it to the rnode using the connection object:
+
+```python
+rholang_file = 'hello_world.rho'
+with open(rholang_file) as fh:
+    rholang_code = fh.read()
+
+# deploy the code and create the new block for the current rchain blockchain
+
+casper.deploy(connection, rholang_code)
+>>> {'success': True, 'message': 'Success!'}
+casper.propose(connection)
+>>> {'success': True, 'message': 'Success! Block 33a9183ff0... created and added.'}
+
+```
 
 
 ### get blocks
