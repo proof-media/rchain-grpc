@@ -207,8 +207,74 @@ with casper.create_connection(host=rnode_host) as connection:
 
 ### name registry
 
-to do
+Using the techniques tested so far we can now:
 
+- write a contract with an [unforgeable name](https://twitter.com/rchain_coop/status/1025184475762765824)
+- register its name to [Name Registry](https://rchain.atlassian.net/wiki/spaces/RHOL/pages/511541342/Name+registry+specification) (introduced in 0.7)
+- and get the id for lookup, to call the contract back
+
+So - all programmatically from Python - we can call a contract in a secure way.
+
+First let's register the name to the Registry:
+
+```python
+ack_name = 'channel_name_for_ack'
+
+rholang_code = """
+new newName, ack, register(`rho:registry:insertArbitrary`), stdout(`rho:io:stdout`) in
+{
+  register!(bundle+{*newName}, *ack)
+  |
+  contract newName(@msg) = {
+    stdout!("Contract called with message: " ++ msg)
+  }
+  |
+  for (@msg <- ack) {
+    %s!(["From registry: ", msg])
+  }
+}
+""" % ack_name
+
+with casper.create_connection(host=rnode_host) as connection:
+    block = casper.run_and_get_value_from(connection, rholang_code, ack_name)
+
+# NOTE: registry will output in the block something like
+# 'rho:id:agbnzpa8h8ie9ohfaa5goqne8zmoidxfrhfg4quypaf6qwkyiy3az6'
+
+```
+
+Now let's parse the output.
+A possible way to make it easier is with JSON and regular expressions:
+
+```python
+import re
+import json
+
+post_block_data = block.get('blockResults').pop().get('postBlockData')
+post_block_str = json.dumps(post_block_data)
+
+match = re.search(r"rho:id:[^\"]+",  post_block_str)
+registry_id = match.group()
+```
+
+Now with the ID you can lookup in the Registry and call the contract from somewhere else safely.
+
+```python
+rholang_code = """
+new return, lookup(`rho:registry:lookup`), stdout(`rho:io:stdout`) in
+{
+  lookup!(`%s`, *return) |
+  for (myContract <- return) {
+    myContract!("This should output STDOUT in your node")
+  }
+}
+""" % registry_id
+
+with casper.create_connection(host=RNODE_HOST) as connection:
+    print(casper.deploy(connection, rholang_code))
+    print(casper.propose(connection))
+
+```
 
 ## Other media
 
