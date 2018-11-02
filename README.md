@@ -11,6 +11,27 @@ Python3 client for RChain nodes gRPC protocol
 *   Documentation: [https://proof-media.github.io/rchain-grpc](https://proof-media.github.io/rchain-grpc)
 
 
+## About this package
+
+This project aims at giving to Python users an easy way to interact with the RChain blockchain.
+Since RChain nodes run [gRPC](https://grpc.io/docs/) servers (by default on port `40401`), this library is built as a Python client with an up-to-date sets of (small) API that sends and receives data through the protocol.
+
+
+## About the RChain blockchain platform
+
+RChain is a new and unique approach to build the blockchain platform for the next generation. You can deploy written in `rholang` smart contracts on RChain nodes.
+
+Here are the main references for the project:
+
+- The main [web site](https://www.rchain.coop/)
+- A gentle [introduction](https://blog.coinfund.io/an-introduction-to-rchain-d5fe303e9fe1) to the RChain world
+- Run your own node following [instructions](https://rchain.atlassian.net/wiki/spaces/CORE/pages/428376065/User+guide+for+running+RNode) or with [docker](https://hub.docker.com/r/rchain/rnode/)
+- Learn how to [write rholang](https://www.rchain.coop/learn-rholang) and try it [in the cloud](https://rchain.cloud/)
+- Details about [the latest RNode release](https://www.rchain.coop/blog/release-of-rnode-v0-7-1/)
+
+You can reach out to the community and developers on [discord](https://discordapp.com/channels/375365542359465989/375365542854262785) and decide to [become a member of the cooperative](https://member.rchain.coop/)
+
+
 ## Current available features
 
 *   Connecting to RChain `rnode` through gRPC protocol
@@ -32,6 +53,16 @@ Rchain is beeing developed as we speak, be careful on which version of this pack
 * `0.7.x` is compatible with `RNode 0.7.x`
 * `0.8.x` will be compatible with `RNode 0.8.x`
 * etc.
+
+
+## Code examples
+
+This project is a wrapper to simplify the use of gRPC interaction with RChain networks. The use cases are very simple!
+
+### bla
+
+bla
+
 
 
 ## Other media
