@@ -81,7 +81,7 @@ def test_deploy(deployed):
 
 def test_propose(proposed):
     assert isinstance(proposed, dict)
-    assert proposed['success']
+    assert proposed['success'] is True
     assert 'created and added' in proposed['message']
 
 

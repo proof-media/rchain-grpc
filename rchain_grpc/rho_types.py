@@ -18,7 +18,7 @@ from .generated.CasperMessage_pb2 import DataAtNameQuery
 
 def e_map_body_to_dict(body):
     ret = {}
-    for kv in body.get('kvs'):
+    for kv in body['kvs']:
         k = toolz.get_in(['key', 0], kv)
         v = toolz.get_in(['value', 0], kv)
         ret[k] = v
@@ -72,6 +72,7 @@ def _(message: Message) -> dict:
 
 
 def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
+    # TODO: check if this can be removed
     return grpc_class(**d)
 
 
