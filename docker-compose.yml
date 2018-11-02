@@ -7,8 +7,8 @@ services:
     volumes:
       - ./:/project
       - cache:/root/.cache/pip
-    working_dir: /project/rchain_grpc
-    entrypoint: ./generate.sh
+    working_dir: /project
+    entrypoint: rchain_grpc/generate.sh
     environment:
       RNODE_RELEASE: ${RNODE_RELEASE}
 

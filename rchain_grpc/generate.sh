@@ -8,6 +8,12 @@ PROTO=./proto
 PY=./generated
 GIT="git clone --depth 1 "
 
+# make sure you have libs
+pip install -r requirements.txt
+
+# go into the grpc directory
+cd /project/rchain_grpc
+
 # download scalaPB and rchain repos, sources of proto files
 $GIT -b release-rnode-v${RNODE_RELEASE} https://github.com/rchain/rchain.git $RCHAIN
 $GIT -b master https://github.com/scalapb/ScalaPB.git $SCALAPB
@@ -21,9 +27,6 @@ cp $RCHAIN/models/src/main/protobuf/CasperMessage.proto $PROTO/CasperMessage.pro
 cp $RCHAIN/models/src/main/protobuf/RhoTypes.proto $PROTO/RhoTypes.proto
 cp $RCHAIN/node/src/main/protobuf/repl.proto $PROTO/repl.proto
 cp -R $SCALAPB/protobuf/scalapb $PROTO/scalapb
-
-# make sure you have libs
-pip install -r requirements.txt
 
 python -m grpc_tools.protoc   `# call code generator`\
        --proto_path=$PROTO    `# path to dir with protofiles`\
