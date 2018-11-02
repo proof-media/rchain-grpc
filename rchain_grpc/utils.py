@@ -1,7 +1,7 @@
 import functools
 import json
 from contextlib import AbstractContextManager
-from typing import Any, Callable, Generic, Type, TypeVar
+from typing import Any, Callable, Generic, List, Type, TypeVar
 
 from grpc import Channel, insecure_channel
 
@@ -64,3 +64,14 @@ def create_connection_builder(stub: Type[Connection]) -> Callable[..., Connectio
 def is_equal(d1: dict, d2: dict) -> bool:
     kwargs = {'sort_keys': True, 'indent': 0}
     return json.dumps(d1, **kwargs) == json.dumps(d2, **kwargs)
+
+
+def register_many(dispatch: Callable[..., Any], types: List[Any]) -> Callable[..., Any]:
+    """register many types to one handler from `functools.singledispatch`"""
+
+    def decorator(fn):
+        for t in types:
+            fn = dispatch.register(t)(fn)
+        return fn
+
+    return decorator

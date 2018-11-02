@@ -5,15 +5,10 @@ from typing import Any, List, Tuple, TypeVar, Union
 import toolz
 from google.protobuf.message import Message
 
-from ._grpc_containers import (RepeatedCompositeFieldContainer,
-                               RepeatedScalarFieldContainer)
-
-# TODO: please check, but without it doesn't work
-from google.protobuf.pyext._message import \
-    RepeatedCompositeContainer, RepeatedScalarContainer
-
-from .generated.RhoTypes_pb2 import Expr, Par
+from ._grpc_containers import IContainer, container_classes
 from .generated.CasperMessage_pb2 import DataAtNameQuery
+from .generated.RhoTypes_pb2 import Expr, Par
+from .utils import register_many
 
 
 def e_map_body_to_dict(body):
@@ -37,29 +32,13 @@ def expr_to_obj(expr: dict) -> dict:
 
 @functools.singledispatch
 def to_dict(other: Any) -> Any:
-    # print("Who am I?", other, type(other))
+    # TODO: remove assert after rchain API become more stable
+    assert isinstance(other, (int, str, float))
     return other
 
 
-# TODO: please check, but without it doesn't work
-@to_dict.register(RepeatedCompositeContainer)
-def _(container: RepeatedCompositeContainer) -> List[dict]:
-    return [to_dict(e) for e in container]
-
-
-# TODO: please check, but without it doesn't work
-@to_dict.register(RepeatedScalarContainer)
-def _(container: RepeatedScalarContainer) -> List[dict]:
-    return [to_dict(e) for e in container]
-
-
-@to_dict.register(RepeatedCompositeFieldContainer)
-def _(container: RepeatedCompositeFieldContainer) -> List[dict]:
-    return [to_dict(e) for e in container]
-
-
-@to_dict.register(RepeatedScalarFieldContainer)
-def _(container: RepeatedScalarFieldContainer) -> List[dict]:
+@register_many(to_dict, container_classes)
+def _(container: IContainer) -> List[dict]:
     return [to_dict(e) for e in container]
 
 
