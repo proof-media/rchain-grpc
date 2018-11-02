@@ -7,7 +7,6 @@ SCALAPB=$TMP/scalapb
 PROTO=./proto
 PY=./generated
 GIT="git clone --depth 1 "
-# RNODE_RELEASE=0.7  # set this into docker compose / env file
 
 # download scalaPB and rchain repos, sources of proto files
 $GIT -b release-rnode-v${RNODE_RELEASE} https://github.com/rchain/rchain.git $RCHAIN

@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   generate:
-    image: python:${MAIN_SUPPORTED_PYTHON_VERSION}
+    image: python:3.7
     volumes:
       - ./:/project
       - cache:/root/.cache/pip
@@ -13,7 +13,7 @@ services:
       RNODE_RELEASE: ${RNODE_RELEASE}
 
   tests-37:
-    image: python:${MAIN_SUPPORTED_PYTHON_VERSION}
+    image: python:3.7
     networks:
       - tests
     depends_on:
@@ -27,7 +27,7 @@ services:
     entrypoint: ./run_tests.sh
 
   tests-36:
-    image: python:${OLD_SUPPORTED_PYTHON_VERSION}
+    image: python:3.6
     networks:
       - tests
     depends_on:
