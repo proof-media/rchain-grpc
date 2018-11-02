@@ -114,6 +114,9 @@ casper.deploy(connection, rholang_code)
 casper.propose(connection)
 >>> {'success': True, 'message': 'Success! Block 33a9183ff0... created and added.'}
 
+# watch the RNode logs for any stdout
+# or to verify the same block hash
+
 ```
 
 Note that the `rholang_code` is just a string with `rholang` valid instructions, you can write your own inside Python too.
@@ -156,12 +159,50 @@ print(block.get('tupleSpaceDump'))
 
 ### context manager
 
-to do
+The connection provided by the library can be used inside a `with` statement:
+
+```python
+# all previous operations in one context
+
+with casper.create_connection(host=rnode_host) as connection:
+
+    # deploy / propose
+    casper.deploy(connection, rholang_code)
+    print(casper.propose(connection))
+
+    # handle output
+    output = casper.get_blocks(connection, depth=1)
+    block_hash = output.pop().get('blockHash')
+    block = casper.get_block(connection, block_hash=block_hash)
+    print(f"Current block number is {block.get('blockNumber')}\nwith hash {block_hash}")
+
+# NOTE: connection here is closed
+```
 
 
 ### interact with channels
 
-to do
+In a more advanced use case, we could also specify a `channel` to listen to:
+
+```python
+output_placeholder = "your_channel_name"
+# A rholang contract that sends 'bar' string to our channel
+rholang_code = f"""
+{output_placeholder}!("bar")
+"""
+
+with casper.create_connection(host=rnode_host) as connection:
+    block = casper.run_and_get_value_from(
+        connection, rholang_code,
+        output_placeholder=output_placeholder
+    )
+
+    results = block.get('blockResults').pop()
+    for message in results.get('postBlockData'):
+        print("Received: ", message.pop())
+
+    # here we get 'bar' back
+```
 
 
 ### name registry
