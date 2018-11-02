@@ -3,19 +3,22 @@ import json
 from typing import Any, List, Tuple, TypeVar, Union
 
 import toolz
-from google.protobuf.empty_pb2 import Empty
 from google.protobuf.message import Message
 
 from ._grpc_containers import (RepeatedCompositeFieldContainer,
                                RepeatedScalarFieldContainer)
-from .generated.CasperMessage_pb2 import DataWithBlockInfo
-from .generated.RhoTypes_pb2 import Channel, Expr, Par, Var
+
+# TODO: please check, but without it doesn't work
+from google.protobuf.pyext._message import \
+    RepeatedCompositeContainer, RepeatedScalarContainer
+
+from .generated.RhoTypes_pb2 import Expr, Par
+from .generated.CasperMessage_pb2 import DataAtNameQuery
 
 
 def e_map_body_to_dict(body):
-    kvs = body['kvs']
     ret = {}
-    for kv in kvs:
+    for kv in body['kvs']:
         k = toolz.get_in(['key', 0], kv)
         v = toolz.get_in(['value', 0], kv)
         ret[k] = v
@@ -33,18 +36,21 @@ def expr_to_obj(expr: dict) -> dict:
 
 
 @functools.singledispatch
-def expr_from_obj(_: Any) -> None:
-    raise ValueError(f'unknown type {type(_)}')
-
-
-@expr_from_obj.register(str)
-def _(s: str) -> Expr:
-    return from_dict({'g_string': s}, Expr)
-
-
-@functools.singledispatch
 def to_dict(other: Any) -> Any:
+    # print("Who am I?", other, type(other))
     return other
+
+
+# TODO: please check, but without it doesn't work
+@to_dict.register(RepeatedCompositeContainer)
+def _(container: RepeatedCompositeContainer) -> List[dict]:
+    return [to_dict(e) for e in container]
+
+
+# TODO: please check, but without it doesn't work
+@to_dict.register(RepeatedScalarContainer)
+def _(container: RepeatedScalarContainer) -> List[dict]:
+    return [to_dict(e) for e in container]
 
 
 @to_dict.register(RepeatedCompositeFieldContainer)
@@ -65,18 +71,25 @@ def _(message: Message) -> dict:
     return {f[0].name: to_dict(f[1]) for f in message.ListFields()}
 
 
-def from_dict(d: dict, klass: GrpcClass) -> GrpcClass:
-    proto = klass()
-    for key, value in d.items():
-        setattr(proto, key, value)
-    return proto
+def from_dict(d: dict, grpc_class: GrpcClass) -> GrpcClass:
+    # TODO: check if this can be removed
+    return grpc_class(**d)
 
 
-def to_channel(objs: list) -> Channel:
+@functools.singledispatch
+def expr_from_obj(_: Any) -> None:
+    raise ValueError(f'unknown type {type(_)}')
+
+
+@expr_from_obj.register(str)
+def _(s: str) -> Expr:
+    return from_dict({'g_string': s}, Expr)
+
+
+def to_channel(objs: list) -> DataAtNameQuery:
     par = Par()
     par.exprs.extend([expr_from_obj(obj) for obj in objs])
-    channel = Channel()
-    channel.quote.CopyFrom(par)
+    channel = DataAtNameQuery(depth=1, name=par)
     return channel
 
 

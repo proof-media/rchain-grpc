@@ -1,7 +1,5 @@
-import secrets
-
+# import secrets
 import pytest
-
 from rchain_grpc import repl
 
 

@@ -1,3 +1,6 @@
+# debug scripts
+debug*.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -80,8 +83,8 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
-# dotenv
-.env
+# # dotenv
+# .env
 
 # virtualenv
 .venv

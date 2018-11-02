@@ -1,3 +1,4 @@
+
 ===========
 rchain-grpc
 ===========
@@ -9,18 +10,13 @@ rchain-grpc
 .. image:: https://travis-ci.com/proof-media/rchain-grpc.svg?branch=master
     :target: https://travis-ci.com/proof-media/rchain-grpc
 
-.. image:: https://readthedocs.org/projects/rchain-grpc/badge/?version=latest
-    :target: https://rchain-grpc.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
-
-
 .. image:: https://pyup.io/repos/github/proof-media/rchain-grpc/shield.svg
     :target: https://pyup.io/repos/github/proof-media/rchain-grpc/
     :alt: Updates
 
 
 
-python client to rchain gRPC
+Python3 client for RChain nodes gRPC protocol
 
 
 * Free software: MIT license
@@ -31,6 +27,13 @@ Features
 --------
 
 * TODO
+
+Versioning
+--------
+
+* 0.0.10 was compatible with RNode 0.6.x
+* 0.0.11 is be compatible with RNode 0.7.x
+* 0.0.? will be compatible with RNode 0.8.x
 
 Media
 -----
@@ -46,10 +49,22 @@ Media
 .. _container image: https://hub.docker.com/r/proofmedia/rchain-notebook/
 .. _Dockerfile: https://github.com/proof-media/rchain-notebook/tree/master/builds/notebooker
 
+Compiling
+-------
+
+When a new version from RChain gets released,
+protobuf definitions / descriptors must be updated.
+
+This can be done selecting a new RNODE_RELEASE in env file
+and running:
+
+.. code:: bash
+
+   docker-compose run --rm generate
+
+
 Credits
 -------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+The source code we have here was inspired by the official snippet at:
+https://github.com/rchain/rchain/tree/dev/node-client

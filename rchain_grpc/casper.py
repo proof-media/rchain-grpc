@@ -1,4 +1,4 @@
-import functools
+
 import json
 import secrets
 import time
@@ -9,8 +9,14 @@ from google.protobuf.empty_pb2 import Empty
 
 from . import rho_types
 from .exceptions import CasperException, TimeoutException
-from .generated import CasperMessage_pb2_grpc
-from .generated.CasperMessage_pb2 import DeployData
+
+from .generated.CasperMessage_pb2_grpc import DeployServiceStub
+from .generated.CasperMessage_pb2 import (
+    BlockQuery, BlocksQuery,
+    PhloLimit, PhloPrice,
+    DeployData,
+)
+
 from .utils import Connection, create_connection_builder, is_equal
 
 
@@ -20,21 +26,29 @@ def throw_if_not_successful(response: dict, name: str) -> dict:
     return response
 
 
-create_connection = create_connection_builder(CasperMessage_pb2_grpc.DeployServiceStub)
+create_connection = create_connection_builder(DeployServiceStub)
 
 
-def get_blocks(connection: Connection) -> List[dict]:
+def get_blocks(connection: Connection, depth: int = 1) -> List[dict]:
     """works in the same way as `./rnode show-blocks`"""
-    output = connection.showBlocks(Empty())
+    output = connection.showBlocks(BlocksQuery(depth=depth))
     return [rho_types.to_dict(i) for i in output]
+
+
+def get_block(connection: Connection, block_hash: str) -> dict:
+    """works in the same way as `./rnode show-block HASH`"""
+    output = connection.showBlock(
+        BlockQuery(hash=block_hash)
+    )
+    return rho_types.to_dict(output).get('blockInfo')
 
 
 def deploy(
     connection: Connection,
     term: str,
     from_: str = '0x0',
-    phlo_limit: int = 0,
-    phlo_price: int = 0,
+    phlo_limit: int = 10000000,
+    phlo_price: int = 1,
     nonce: int = 0,
 ) -> dict:
     """works in the same way as `./rnode deploy`
@@ -45,8 +59,8 @@ def deploy(
         {
             'term': term,
             'from': from_,
-            'phloLimit': phlo_limit,
-            'phloPrice': phlo_price,
+            'phloLimit': PhloLimit(value=phlo_limit),
+            'phloPrice': PhloPrice(value=phlo_price),
             'nonce': nonce,
             'timestamp': timestamp,
         },
@@ -71,8 +85,8 @@ def listen_on(
     Check channel in every second given in `interval`"""
     old_value = {}
 
-    # TODO: ask rchain dev team for making `showBlocks` streamin infinitly
-    # TODO: use ininite stream from `showBlocks` instead and check only on new block
+    # TODO: ask rchain dev team for making `showBlocks` streaming infinitely
+    # TODO: use infinite stream from `showBlocks` instead and check only on new block
     start_time = time.time()
     while True:
         value = get_value_from(connection, name)
@@ -88,6 +102,9 @@ def get_value_from(connection: Connection, name: str) -> Optional[dict]:
     """get value from channel on given name"""
     rchain_channel = rho_types.to_channel([name])
     output = connection.listenForDataAtName(rchain_channel)
+    # from google.protobuf.json_format import MessageToDict
+    # result = MessageToDict(output)
+    # print(result)
     result = rho_types.to_dict(output)
     if 'blockResults' in result:
         return result

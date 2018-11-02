@@ -1,4 +1,3 @@
-.. highlight:: shell
 
 ============
 Contributing
@@ -109,3 +108,25 @@ $ git push
 $ git push --tags
 
 Travis will then deploy to PyPI if tests pass.
+
+
+Upgrading to new RNode release
+---------
+
+When a new version from RChain gets released,
+protobuf definitions / descriptors must be updated/re-compiled.
+
+This can be done selecting a new RNODE_RELEASE in the .env file
+and then running::
+
+    $ docker-compose run --rm generate
+
+
+Debugging
+---------
+
+You can access a working shell on docker with::
+
+    $ docker-compose run --rm --entrypoint /bin/bash tests-37
+    $ pip install ipython && pip install --editable . && ipython
+    # [ipython shell]
