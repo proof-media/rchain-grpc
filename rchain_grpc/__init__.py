@@ -1,4 +1,4 @@
-# hack needed becouse protc use absolute imports
+# NOTE: this hack is needed because protc uses absolute imports...
 import os
 import sys
 
@@ -11,4 +11,4 @@ import CasperMessage_pb2_grpc  # isort:skip
 import RhoTypes_pb2  # isort:skip
 import RhoTypes_pb2_grpc  # isort:skip
 
-__version__ = '0.0.11'
+__version__ = '0.7.0'
