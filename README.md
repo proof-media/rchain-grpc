@@ -116,10 +116,42 @@ casper.propose(connection)
 
 ```
 
+Note that the `rholang_code` is just a string with `rholang` valid instructions, you can write your own inside Python too.
+
 
 ### get blocks
 
-to do
+Get the latest block hash:
+```python
+casper.get_blocks(connection, depth=1)
+
+>>> [{'blockHash': '33a9183ff02c17f9d55d0a087be453163bc39fd07a3d19f3fac10a67286a6135',
+  'blockSize': '1340',
+  'blockNumber': 1,
+  'deployCount': 1,
+  'tupleSpaceHash': '477f7f0c469de6d500d8a1f74852a4ecf49df9a7fa463207d62258161bf39fb7',
+  'timestamp': 1540906627156,
+  'faultTolerance': -1.0,
+  'mainParentHash': 'd85ee52cec7c09e301cef8ad2d3b3e807defc54f92d391f75c96a366c878d54a',
+  'parentsHashList': ['d85ee52cec7c09e301cef8ad2d3b3e807defc54f92d391f75c96a366c878d54a'],
+  'sender': 'eabe5a1a0750d2a8745709bb0bdb24f63c6a8ac3a887b9bed40b34b0598ddf08'}]
+
+# NOTE: protobuf outputs are always converted into Python dictionaries
+# automatically by our library
+```
+
+Once you know a block hash you can get detailed informations and a dump of tuplespace directly:
+
+```python
+output = casper.get_blocks(connection)
+block_hash = output.pop().get('blockHash')
+block = casper.get_block(connection, block_hash=block_hash)
+
+print(block.get('tupleSpaceDump'))
+
+# [...]
+# lots of code output
+```
 
 
 ### context manager
