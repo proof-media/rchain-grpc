@@ -42,7 +42,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/proof-media/rchain_grpc',
-    version='0.7.0',
+    url='https://github.com/proof-media/rchain-grpc',
+    version='0.7.1',
     zip_safe=True,
 )

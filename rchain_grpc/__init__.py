@@ -11,4 +11,4 @@ import CasperMessage_pb2_grpc  # isort:skip
 import RhoTypes_pb2  # isort:skip
 import RhoTypes_pb2_grpc  # isort:skip
 
-__version__ = '0.7.0'
+__version__ = '0.7.1'
