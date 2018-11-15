@@ -70,9 +70,9 @@ Ready to contribute? Here's how to set up `rchain_grpc` for local development.
 
    Now you can make your changes locally.
 
-5. When you're done making changes, check that your changes pass tests::
+5. When you're done making changes, check that they pass tests::
 
-    $ docker-compose run --rm tests-36 && docker-compose run --rm tests-37  # in other terminal
+    $ ./test_all_python_versions.sh
 
 6. Commit your changes and push your branch to GitHub::
 

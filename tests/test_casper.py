@@ -113,7 +113,7 @@ def test_listen_on(deployed, connection, rchain_ch_name, rchain_ch_value):
 
     with futures.ThreadPoolExecutor() as executor:
         future = executor.submit(run)
-        proposed(connection, deployed)
+        casper.propose(connection)
         ret = future.result(timeout=5)
         assert parse_output(ret)[0][0] == rchain_ch_value
 
