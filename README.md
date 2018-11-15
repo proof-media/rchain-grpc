@@ -75,7 +75,7 @@ docker run \
 In [1]: import rchain_grpc
 
 In [2]: rchain_grpc.__version__
-Out[2]: '0.7.0'
+Out[2]: '0.7.1'
 ```
 
 
