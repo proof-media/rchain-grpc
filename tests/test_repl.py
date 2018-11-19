@@ -1,29 +1,40 @@
-# import secrets
+import re
 import pytest
 from rchain_grpc import repl
 
 
+def repl_parser(returned):
+    output = returned.get('output', '')
+    regex = re.compile(r"deployment cost: ([^\n]+)", re.IGNORECASE)
+    m = regex.match(output)
+    if m:
+        costs = m.groups()[0]
+    else:
+        costs = None
+    regex = re.compile(r"^.*storage contents\:", re.IGNORECASE)
+    tuple_space = regex.sub('', output.replace('\n', ''))
+    return tuple_space, costs
+
+
+def verify_repl_output(repl_output):
+    assert isinstance(repl_output, dict)
+    tuple_space, costs = repl_parser(repl_output)
+    assert 'Cost' in costs
+    for keyword in ['Unforgeable', 'for', 'Nil']:
+        keyword in tuple_space
+
+
 @pytest.fixture
 def connection(rchain_host):
-    return repl.create_connection(host=rchain_host)
+    return repl.create_connection(host=rchain_host, port=40402)
 
 
-@pytest.fixture
-def contract_path():
-    # file must be available from rchain container
-    # look on `proof-monorepo/rchain` directory which is available
-    # in rchain container on `/rchain` path.
-    # It already has `test_contract.rho`
-    return '/rchain/test_contract.rho'
-
-
-@pytest.mark.xfail(reason='not work with current rnode')
 def test_run(connection):
     ret = repl.run(connection, 'new x in { x!(1 + 1) }')
-    assert isinstance(ret, dict)
+    verify_repl_output(ret)
 
 
-@pytest.mark.xfail(reason='not work with current rnode')
-def test_eval(connection, contract_path):
-    ret = repl.eval(connection, contract_path)
-    assert isinstance(ret, dict)
+def test_eval(connection):
+    rholang_code = '''new stdout(`rho:io:stdout`) in {stdout!("testing!")}'''
+    ret = repl.eval(connection, rholang_code)
+    verify_repl_output(ret)

@@ -20,13 +20,14 @@ from .generated.CasperMessage_pb2 import (
 from .utils import Connection, create_connection_builder, is_equal
 
 
+# NOTE: default port for CASPER gRPC is 40401
+create_connection = create_connection_builder(DeployServiceStub)
+
+
 def throw_if_not_successful(response: dict, name: str) -> dict:
     if response.get('success') is not True:
         raise CasperException(f'Operation "{name}": not successfull', response)
     return response
-
-
-create_connection = create_connection_builder(DeployServiceStub)
 
 
 def get_blocks(connection: Connection, depth: int = 1) -> List[dict]:
