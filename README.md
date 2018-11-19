@@ -276,6 +276,34 @@ with casper.create_connection(host=RNODE_HOST) as connection:
 
 ```
 
+
+### Evaluating code
+
+You can evaluate code without impacting the node.
+
+This is usefull for checking syntax errors in your rholang code, or to get a sense of how expensive your code would be to run in the real network.
+
+```python
+from rchain_grpc import repl
+
+rnode_host = '...'  # valid IP of running node
+internal_grpc_port = 40402
+
+connection = repl.create_connection(host=rnode_host, port=internal_grpc_port)
+rholang_code = """new print(`rho:io:stdout`) in { print!("Hello World!") }"""
+output = repl.eval(connection=connection, program=rholang_code)
+# or line by line with
+# output = repl.run(connection=connection, line=rholang_code)
+
+# parse it
+tuple_space, costs = repl.output_parser(output)
+print("Your code would cost: ", costs)
+print("Tuple space glimps: ", tuple_space[:100] + '...')
+```
+
+NOTE: syntax errors give better explanation in rnode logs
+
+
 ## Other media
 
 *   [Recorded walk-through](youtu.be/H_pmVff7c3Q) and [slides](https://nbviewer.jupyter.org/format/slides/github/proof-media/rchain-notebook/blob/master/notebooks/walk-through.ipynb#/) for the rchain discord community
