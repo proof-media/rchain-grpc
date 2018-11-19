@@ -2,6 +2,15 @@
 History
 =======
 
+
+0.7.2 (2018-11-19)
+------------------
+* Added Eval/Repl support
+* Updated protos
+* Dependencies upgrade
+* Bug fixes
+
+
 0.7.1 (2018-11-05)
 ------------------
 * Bug fix missing file in package
